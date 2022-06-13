@@ -15,7 +15,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogenOption
     const lines = group.reverse()
       .map((commit) => {
         const scope = commit.scope ? `**${commit.scope.trim()}:** ` : ''
-        const ref = `([${commit.references[0]}](https://github.com/${config.github}/commit/${commit.references[0]}))`
+        const ref = `[\`${commit.references[0]}\`](https://github.com/${config.github}/commit/${commit.references[0]})`
         const line = `- ${scope}${commit.description} ${ref}`
         if (commit.isBreaking) {
           breakingChanges.push(line)
