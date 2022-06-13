@@ -1,8 +1,9 @@
+/* eslint-disable no-console */
 import { fetch } from 'ohmyfetch'
-import { getCurrentGitBranch, getGitDiff, getLastGitTag, parseCommits } from 'changelogen'
+import { getGitDiff, getLastGitTag, parseCommits } from 'changelogen'
 import semver from 'semver'
 import type { ChangelogOptions } from './types'
-import { getGitHubRepo } from './git'
+import { getCurrentGitBranch, getGitHubRepo } from './git'
 import { generateMarkdown } from './markdown'
 
 export default async function changelogithub(
@@ -24,9 +25,20 @@ export default async function changelogithub(
 
   const rawCommits = await getGitDiff(config.from, config.to)
   const commits = parseCommits(rawCommits, config)
-  const md = generateMarkdown(commits, config)
+  const filtered = commits.filter(c => config.types[c.type])
 
-  await sendRelease(config, md)
+  if (!commits.length) {
+    console.log('No commits')
+    process.exitCode = 1
+    return
+  }
+
+  const md = generateMarkdown(filtered, config)
+
+  if (config.dry)
+    console.log(md)
+  else
+    await sendRelease(config, md)
 }
 
 async function sendRelease(

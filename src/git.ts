@@ -9,3 +9,13 @@ export async function getGitHubRepo() {
   return `${match[1]}/${match[2]}`
 }
 
+export async function getCurrentGitBranch() {
+  return await execCommand('git', ['tag', '--points-at', 'HEAD']) || await execCommand('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
+}
+
+async function execCommand(cmd: string, args: string[]) {
+  const { execa } = await import('execa')
+  const res = await execa(cmd, args)
+  return res.stdout
+}
+

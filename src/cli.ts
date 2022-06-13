@@ -6,6 +6,7 @@ const args = minimist(process.argv.slice(2), {
   boolean: [
     'draft',
     'prerelease',
+    'dry',
   ],
   string: [
     'token',
