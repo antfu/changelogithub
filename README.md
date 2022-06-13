@@ -8,6 +8,7 @@ Fork from [`conventional-github-releaser`](https://github.com/conventional-chang
 
 - The preset is default to `angular`. `-p angular` is no longer required.
 - It also reads `GITHUB_TOKEN` from env as fallback
+- Requires Node v12 or higher
 
 ## Quick start
 

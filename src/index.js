@@ -1,6 +1,5 @@
 'use strict'
 
-const assign = require('object-assign')
 const conventionalChangelog = require('conventional-changelog')
 const debug = require('debug')('changelogithub')
 const gitSemverTags = require('git-semver-tags')
@@ -54,9 +53,10 @@ function conventionalGithubReleaser(auth, changelogOpts, context, gitRawCommitsO
 
       const releaseCount = changelogOpts.releaseCount
       if (releaseCount !== 0) {
-        gitRawCommitsOpts = assign({
+        gitRawCommitsOpts = {
           from: tags[releaseCount],
-        }, gitRawCommitsOpts)
+          ...gitRawCommitsOpts,
+        }
       }
 
       gitRawCommitsOpts.to = gitRawCommitsOpts.to || tags[0]
