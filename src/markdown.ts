@@ -20,7 +20,7 @@ function formatSection(commits: GitCommit[], sectionName: string, config: Change
     return []
   const lines: string[] = [
     '',
-    `### &nbsp;&nbsp;${sectionName}`,
+    `### &nbsp;&nbsp;&nbsp;${sectionName}`,
     '',
   ]
   const scopes = groupBy(commits, 'scope')
