@@ -41,12 +41,12 @@ const cli = meow({
   flags: {
     url: {
       alias: 'u',
-      default: process.env.CONVENTIONAL_GITHUB_URL || 'https://api.github.com/',
+      default: process.env.CONVENTIONAL_GITHUB_URL || process.env.GITHUB_URL || 'https://api.github.com/',
       type: 'string',
     },
     token: {
       alias: 't',
-      default: process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN,
+      default: process.env.CONVENTIONAL_GITHUB_RELEASER_TOKEN || process.env.GITHUB_TOKEN,
       type: 'string',
     },
     preset: {

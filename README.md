@@ -4,9 +4,10 @@
 
 Fork from [`conventional-github-releaser`](https://github.com/conventional-changelog/releaser-tools/tree/master/packages/conventional-github-releaser).
 
-## Changes
+## Changes in this fork
 
 - The preset is default to `angular`. `-p angular` is no longer required.
+- It also reads `GITHUB_TOKEN` from env as fallback
 
 ## Quick start
 
