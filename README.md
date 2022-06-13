@@ -4,7 +4,13 @@
 
 Generate changelog for GitHub releases from [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), powered by [changelogen](https://github.com/unjs/changelogen).
 
-[Changelog example](https://github.com/unocss/unocss/releases/tag/v0.39.0)
+[👉 Changelog example](https://github.com/unocss/unocss/releases/tag/v0.39.0)
+
+## Features
+
+- Support exclamation mark as breaking change, e.g. `chore!: drop node v10`
+- Grouped scope in changelog
+- Create the release note, or update the existing one
 
 ## Usage
 
@@ -36,6 +42,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
+
+It will be trigged whenever you push a tag to GitHub that starts with `v`.
 
 ## Preview Locally
 
