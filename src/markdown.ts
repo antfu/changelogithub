@@ -44,7 +44,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions)
 
   const url = `https://github.com/${config.github}/compare/${config.from}...${config.to}`
 
-  markdown += `\n<br>\n> [Changes on GitHub](${url})\n`
+  markdown += `\n\n<br>\n\n> [Changes on GitHub](${url})\n`
 
   return markdown.trim()
 }
