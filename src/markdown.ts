@@ -5,7 +5,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogenOption
   const typeGroups = groupBy(commits, 'type')
 
   let markdown = ''
-  const breakingChanges = []
+  const breakingChanges: string[] = []
 
   for (const type in config.types) {
     const group = typeGroups[type]
@@ -30,7 +30,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogenOption
     if (!lines.length)
       continue
 
-    markdown += `\n\n### ${config.types[type].title}\n\n${lines.length.join('\n')}`
+    markdown += `\n\n### ${config.types[type].title}\n\n${lines.join('\n')}`
   }
 
   if (breakingChanges.length)
@@ -44,11 +44,12 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogenOption
   return markdown.trim()
 }
 
-function groupBy(items: any[], key: string) {
-  const groups = {}
+function groupBy<T>(items: T[], key: string) {
+  const groups: Record<string, T[]> = {}
   for (const item of items) {
-    groups[item[key]] = groups[item[key]] || []
-    groups[item[key]].push(item)
+    const v = (item as any)[key] as string
+    groups[v] = groups[v] || []
+    groups[v].push(item)
   }
   return groups
 }
