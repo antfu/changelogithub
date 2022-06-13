@@ -12,9 +12,9 @@ Fork from [`conventional-github-releaser`](https://github.com/conventional-chang
 
 ## Quick start
 
-```sh
+<!-- ```sh
 npx changelogithub preview
-```
+``` -->
 
 ```sh
 npx changelogithub

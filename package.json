@@ -35,17 +35,17 @@
     "release": "bumpp --commit --push --tag && npm publish"
   },
   "dependencies": {
-    "conventional-changelog": "^2.0.0",
-    "dateformat": "^3.0.0",
-    "debug": "^3.1.0",
-    "gh-got": "^7.0.0",
-    "git-semver-tags": "^2.0.0",
-    "lodash.merge": "^4.0.2",
-    "meow": "^7.0.0",
-    "q": "^1.4.1",
-    "semver": "^5.0.1",
-    "semver-regex": "^2.0.0",
-    "through2": "^2.0.0"
+    "conventional-changelog": "^3.1.25",
+    "dateformat": "^5.0.3",
+    "debug": "^4.3.4",
+    "gh-got": "^9.0.0",
+    "git-semver-tags": "^4.1.1",
+    "lodash.merge": "^4.6.2",
+    "meow": "^10.1.2",
+    "q": "^2.0.3",
+    "semver": "^7.3.7",
+    "semver-regex": "^4.0.5",
+    "through2": "^4.0.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
