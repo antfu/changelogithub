@@ -1,38 +1,28 @@
-'use strict'
+/* eslint-disable no-console */
+// @ts-check
+import conventionalChangelog from 'conventional-changelog'
+import createDebug from 'debug'
+import gitSemverTags from 'git-semver-tags'
+import { fetch } from 'ohmyfetch'
+import merge from 'lodash.merge'
+import semver from 'semver'
+import through from 'through2'
+import { transform } from './transform.js'
 
-const conventionalChangelog = require('conventional-changelog')
-const debug = require('debug')('changelogithub')
-const gitSemverTags = require('git-semver-tags')
-const ghGot = require('gh-got')
-const merge = require('lodash.merge')
-const Q = require('q')
-const semver = require('semver')
-const through = require('through2')
-const transform = require('./transform')
+const debug = createDebug('changelogithub')
 
-/* eslint max-params: ["error", 7] */
-function conventionalGithubReleaser(auth, changelogOpts, context, gitRawCommitsOpts, parserOpts, writerOpts, userCb) {
+export default async function conventionalGithubReleaser(
+  auth,
+  changelogOpts = {},
+  context = {},
+  gitRawCommitsOpts = {},
+  parserOpts = {},
+  writerOpts = {},
+) {
   if (!auth)
     throw new Error('Expected an auth object')
 
   const promises = []
-
-  const changelogArgs = [changelogOpts, context, gitRawCommitsOpts, parserOpts, writerOpts].map((arg) => {
-    if (typeof arg === 'function') {
-      userCb = arg
-      return {}
-    }
-    return arg || {}
-  })
-
-  if (!userCb)
-    throw new Error('Expected an callback')
-
-  changelogOpts = changelogArgs[0]
-  context = changelogArgs[1]
-  gitRawCommitsOpts = changelogArgs[2]
-  parserOpts = changelogArgs[3]
-  writerOpts = changelogArgs[4]
 
   changelogOpts = merge({
     transform,
@@ -44,66 +34,73 @@ function conventionalGithubReleaser(auth, changelogOpts, context, gitRawCommitsO
   // ignore the default header partial
   writerOpts.headerPartial = writerOpts.headerPartial || ''
 
-  Q.nfcall(gitSemverTags)
-    .then((tags) => {
-      if (!tags || !tags.length) {
-        setImmediate(userCb, new Error('No semver tags found'))
-        return
-      }
+  const tags = await new Promise((resolve, reject) => {
+    gitSemverTags((err, r) => {
+      if (err)
+        reject(err)
+      else
+        resolve(r)
+    })
+  })
 
-      const releaseCount = changelogOpts.releaseCount
-      if (releaseCount !== 0) {
-        gitRawCommitsOpts = {
-          from: tags[releaseCount],
-          ...gitRawCommitsOpts,
-        }
-      }
+  if (!tags || !tags.length)
+    throw new Error('No semver tags found')
 
-      gitRawCommitsOpts.to = gitRawCommitsOpts.to || tags[0]
+  const releaseCount = changelogOpts.releaseCount
+  if (releaseCount !== 0) {
+    gitRawCommitsOpts = {
+      from: tags[releaseCount],
+      ...gitRawCommitsOpts,
+    }
+  }
 
-      conventionalChangelog(changelogOpts, context, gitRawCommitsOpts, parserOpts, writerOpts)
-        .on('error', (err) => {
-          userCb(err)
-        })
-        .pipe(through.obj((chunk, enc, cb) => {
-          if (!chunk.keyCommit || !chunk.keyCommit.version) {
-            cb()
-            return
-          }
+  gitRawCommitsOpts.to = gitRawCommitsOpts.to || tags[0]
 
-          const url = `repos/${context.owner}/${context.repository}/releases`
-          const options = {
-            endpoint: auth.url,
-            body: {
-              body: chunk.log,
-              draft: changelogOpts.draft || false,
-              name: changelogOpts.name || chunk.keyCommit.version,
-              prerelease: semver.parse(chunk.keyCommit.version).prerelease.length > 0,
-              tag_name: chunk.keyCommit.version,
-              target_commitish: changelogOpts.targetCommitish,
-            },
-          }
-          debug(`posting %o to the following URL - ${url}`, options)
-
-          // Set auth after debug output so that we don't print auth token to console.
-          options.token = auth.token
-
-          promises.push(ghGot(url, options))
-
+  await new Promise((resolve, reject) => {
+    conventionalChangelog(changelogOpts, context, gitRawCommitsOpts, parserOpts, writerOpts)
+      .on('error', (err) => {
+        reject(err)
+      })
+      .pipe(through.obj((chunk, enc, cb) => {
+        if (!chunk.keyCommit || !chunk.keyCommit.version) {
           cb()
-        }, () => {
-          Q.all(promises)
-            .then((responses) => {
-              userCb(null, responses)
-            })
-            .catch((err) => {
-              userCb(err)
-            })
+          return
+        }
+
+        console.log(chunk.keyCommit.version)
+        console.log()
+        console.log(chunk.log.trim())
+
+        const url = `${auth.url}repos/${context.owner}/${context.repository}/releases`
+        const body = {
+          body: chunk.log.trim(),
+          draft: changelogOpts.draft || false,
+          name: changelogOpts.name || chunk.keyCommit.version,
+          prerelease: semver.parse(chunk.keyCommit.version).prerelease.length > 0,
+          tag_name: chunk.keyCommit.version,
+          target_commitish: changelogOpts.targetCommitish,
+        }
+        debug('posting %o', body)
+
+        promises.push(fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(body),
+          headers: {
+            accept: 'application/vnd.github.v3+json',
+            authorization: `token ${auth.token}`,
+          },
         }))
-    })
-    .catch((err) => {
-      userCb(err)
-    })
+
+        cb()
+      }, () => {
+        Promise.all(promises)
+          .then((responses) => {
+            resolve(responses)
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      }))
+  })
 }
 
-module.exports = conventionalGithubReleaser

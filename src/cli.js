@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-'use strict'
-
-const resolve = require('path').resolve
-const meow = require('meow')
-const conventionalGithubReleaser = require('./index')
+import { resolve } from 'path'
+import { createRequire } from 'module'
+import meow from 'meow'
+import conventionalGithubReleaser from './index.js'
 
 const cli = meow({
   help: `
@@ -38,6 +37,7 @@ const cli = meow({
       -d, --draft               Publishes a draft instead of a real release
                                 Default: false
   `,
+  importMeta: import.meta,
   flags: {
     url: {
       alias: 'u',
@@ -92,6 +92,8 @@ let gitRawCommitsOpts
 let parserOpts
 let writerOpts
 
+const require = createRequire(import.meta.url)
+
 try {
   if (flags.context)
     templateContext = require(resolve(process.cwd(), flags.context))
@@ -127,15 +129,10 @@ if (flags.verbose) {
   changelogOpts.warn = console.warn.bind(console)
 }
 
-conventionalGithubReleaser({
+const data = await conventionalGithubReleaser({
   url: flags.url,
   token: flags.token,
-}, changelogOpts, templateContext, gitRawCommitsOpts, parserOpts, writerOpts, (err, data) => {
-  if (err) {
-    console.error(err.toString())
-    process.exit(1)
-  }
+}, changelogOpts, templateContext, gitRawCommitsOpts, parserOpts, writerOpts)
 
-  if (flags.verbose)
-    console.log(data)
-})
+if (flags.verbose)
+  console.log(data)

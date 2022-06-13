@@ -1,5 +1,6 @@
 {
   "name": "changelogithub",
+  "type": "module",
   "version": "0.0.2-beta.1",
   "packageManager": "pnpm@7.2.0",
   "description": "Generate changelog for GitHub.",
@@ -42,13 +43,16 @@
     "git-semver-tags": "^4.1.1",
     "lodash.merge": "^4.6.2",
     "meow": "^10.1.2",
-    "q": "^2.0.3",
+    "ohmyfetch": "^0.4.18",
     "semver": "^7.3.7",
     "semver-regex": "^4.0.5",
     "through2": "^4.0.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
+    "@types/conventional-changelog": "^3.1.1",
+    "@types/debug": "^4.1.7",
+    "@types/semver": "^7.3.9",
     "bumpp": "^7.1.1",
     "eslint": "^8.17.0",
     "typescript": "^4.7.3"

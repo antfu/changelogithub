@@ -1,9 +1,7 @@
-'use strict'
+import dateFormat from 'dateformat'
+import semverRegex from 'semver-regex'
 
-const dateFormat = require('dateformat')
-const semverRegex = require('semver-regex')
-
-function transform(chunk, cb) {
+export function transform(chunk, cb) {
   if (typeof chunk.gitTags === 'string')
     chunk.version = (chunk.gitTags.match(semverRegex()) || [])[0]
 
@@ -12,5 +10,3 @@ function transform(chunk, cb) {
 
   cb(null, chunk)
 }
-
-module.exports = transform
