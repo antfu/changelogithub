@@ -16,7 +16,6 @@ export default async function changelogithub(
       feat: { title: '🚀 Features' },
       fix: { title: '🐞 Bug Fixes' },
       perf: { title: '🏎 Performance' },
-      docs: { title: '📚 Documentation' },
     },
     breakingChangeMessage: '🚨 Breaking Changes',
     ...options as any,
