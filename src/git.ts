@@ -13,6 +13,11 @@ export async function getCurrentGitBranch() {
   return await execCommand('git', ['tag', '--points-at', 'HEAD']) || await execCommand('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
 }
 
+export async function getLastGitTag(delta = -1) {
+  const tags = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=taggerdate']).then(r => r.split('\n'))
+  return tags[tags.length + delta]
+}
+
 async function execCommand(cmd: string, args: string[]) {
   const { execa } = await import('execa')
   const res = await execa(cmd, args)
