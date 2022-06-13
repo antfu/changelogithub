@@ -16,8 +16,13 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions)
     const lines = group.reverse()
       .map((commit) => {
         const scope = commit.scope ? `**${commit.scope.trim()}:** ` : ''
-        const ref = `[\`${commit.references[0]}\`](https://github.com/${config.github}/commit/${commit.references[0]})`
-        const line = `- ${scope}${commit.description} ${ref}`
+        const refs = commit.references.map((r) => {
+          const url = r[0] === '#'
+            ? `https://github.com/${config.github}/issues/${r.slice(1)}`
+            : `https://github.com/${config.github}/commit/${r}`
+          return `[\`${r}\`](${url})`
+        }).join(' ')
+        const line = `- ${scope}${commit.description} ${refs}`
         if (commit.isBreaking) {
           breakingChanges.push(line)
           return undefined
