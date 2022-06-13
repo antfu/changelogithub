@@ -31,7 +31,8 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "start": "node ./src/cli.js"
+    "start": "node ./src/cli.js",
+    "release": "bumpp --commit --push --tag && npm publish"
   },
   "dependencies": {
     "conventional-changelog": "^2.0.0",
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
+    "bumpp": "^7.1.1",
     "eslint": "^8.17.0",
     "typescript": "^4.7.3"
   }
