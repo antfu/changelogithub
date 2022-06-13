@@ -52,6 +52,7 @@ const cli = meow({
     preset: {
       alias: 'p',
       type: 'string',
+      default: 'angular',
     },
     pkg: {
       alias: 'k',
