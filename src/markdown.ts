@@ -2,7 +2,7 @@ import type { GitCommit } from 'changelogen'
 import type { ChangelogOptions } from './types'
 
 export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions) {
-  const group = groupBy(commits, 'type')
+  const group = groupBy(commits, 'type', Object.fromEntries(Object.keys(config.types).map(i => [i, []])))
 
   const titlePadding = '&nbsp;&nbsp;&nbsp;'
   let markdown = ''
@@ -51,8 +51,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions)
   return markdown.trim()
 }
 
-function groupBy<T>(items: T[], key: string) {
-  const groups: Record<string, T[]> = {}
+function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {
   for (const item of items) {
     const v = (item as any)[key] as string
     groups[v] = groups[v] || []
