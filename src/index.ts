@@ -31,7 +31,6 @@ export default async function changelogithub(
 
   const rawCommits = await getGitDiff(config.from, config.to)
   const commits = parseCommits(rawCommits, config)
-  const filtered = commits.filter(c => config.types[c.type])
 
   if (!commits.length) {
     console.log('No commits')
@@ -39,7 +38,7 @@ export default async function changelogithub(
     return
   }
 
-  const md = generateMarkdown(filtered, config)
+  const md = generateMarkdown(commits, config)
 
   console.log(bold(config.github))
   console.log(cyan(config.from) + dim(' -> ') + blue(config.to))

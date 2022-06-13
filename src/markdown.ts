@@ -8,11 +8,8 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions)
   let markdown = ''
   const breakingChanges: string[] = []
 
-  for (const type in config.types) {
-    const group = typeGroups[type]
-    if (!group || !group.length)
-      continue
-
+  for (const type in Object.keys(typeGroups)) {
+    const group = typeGroups[type] || []
     const lines = group.reverse()
       .map((commit) => {
         const scope = commit.scope ? `**${commit.scope.trim()}:** ` : ''
@@ -34,6 +31,9 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions)
       .filter(Boolean)
 
     if (!lines.length)
+      continue
+
+    if (!config.types[type])
       continue
 
     markdown += `\n\n### ${titlePadding}${config.types[type].title}\n\n${lines.join('\n')}`
