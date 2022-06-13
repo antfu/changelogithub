@@ -1,54 +1,70 @@
 import type { GitCommit } from 'changelogen'
+import { partition } from '@antfu/utils'
+import { upperFirst } from 'scule'
 import type { ChangelogOptions } from './types'
 
+function formatLine(commit: GitCommit, github: string) {
+  const refs = commit.references.map((r) => {
+    if (!github)
+      return `\`${r}\``
+    const url = r[0] === '#'
+      ? `https://github.com/${github}/issues/${r.slice(1)}`
+      : `https://github.com/${github}/commit/${r}`
+    return `[\`${r}\`](${url})`
+  }).join(' ')
+  return `- ${upperFirst(commit.description)} ${refs}`
+}
+
+function formatSection(commits: GitCommit[], sectionName: string, config: ChangelogOptions) {
+  if (!commits.length)
+    return []
+  const lines: string[] = [
+    '',
+    `### &nbsp;&nbsp;${sectionName}`,
+    '',
+  ]
+  const scopes = groupBy(commits, 'scope')
+  const keys = Object.keys(scopes).sort()
+  keys.forEach((key) => {
+    let padding = ''
+    if (key) {
+      lines.push(`- **${key}:**`)
+      padding = '  '
+    }
+    lines.push(...scopes[key]
+      .reverse()
+      .map(i => padding + formatLine(i, config.github)),
+    )
+  })
+  return lines
+}
+
 export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions) {
-  const group = groupBy(commits, 'type', Object.fromEntries(Object.keys(config.types).map(i => [i, []])))
+  const lines: string[] = []
 
-  const titlePadding = '&nbsp;&nbsp;&nbsp;'
-  let markdown = ''
-  const breakingChanges: string[] = []
+  const [breaking, changes] = partition(commits, c => c.isBreaking)
 
-  for (const type of Object.keys(group)) {
+  const group = groupBy(changes, 'type')
+
+  lines.push(
+    ...formatSection(breaking, config.breakingChangeMessage, config),
+  )
+
+  for (const type of Object.keys(config.types)) {
     const items = group[type] || []
-    const lines = items.reverse()
-      .map((commit) => {
-        const scope = commit.scope ? `**${commit.scope.trim()}:** ` : ''
-        const refs = commit.references.map((r) => {
-          const url = r[0] === '#'
-            ? `https://github.com/${config.github}/issues/${r.slice(1)}`
-            : `https://github.com/${config.github}/commit/${r}`
-          return `[\`${r}\`](${url})`
-        }).join(' ')
-        const line = `- ${scope}${commit.description} ${refs}`
-        if (commit.isBreaking) {
-          breakingChanges.push(line)
-          return undefined
-        }
-        else {
-          return line
-        }
-      })
-      .filter(Boolean)
-
-    if (!lines.length)
-      continue
-    if (!config.types[type])
-      continue
-
-    markdown += `\n\n### ${titlePadding}${config.types[type].title}\n\n${lines.join('\n')}`
+    lines.push(
+      ...formatSection(items, config.types[type].title, config),
+    )
   }
 
-  if (!markdown)
-    markdown = '*No significant changes*'
-
-  if (breakingChanges.length)
-    markdown = `### ${titlePadding}${config.breakingChangeMessage}\n\n${breakingChanges.join('\n')}${markdown}`
+  if (!lines.length)
+    lines.push('*No significant changes*')
 
   const url = `https://github.com/${config.github}/compare/${config.from}...${config.to}`
 
-  markdown += `\n\n##### ${titlePadding} [View changes on GitHub](${url})\n`
+  lines.push('', `##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](${url})`)
 
-  return markdown.trim()
+  return lines.join('\n').trim()
 }
 
 function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {

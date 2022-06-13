@@ -11,6 +11,7 @@ const args = minimist(process.argv.slice(2), {
   ],
   string: [
     'token',
+    'github',
     'from',
     'to',
     'name',
