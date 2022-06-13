@@ -2,25 +2,35 @@
 
 > Generate changelog for GitHub.
 
-Fork from [`conventional-github-releaser`](https://github.com/conventional-changelog/releaser-tools/tree/master/packages/conventional-github-releaser).
+In GitHub Actions:
 
-## Changes in this fork
+```yml
+# .github/workflows/release.yml
 
-- The preset is default to `angular`. `-p angular` is no longer required.
-- It also reads `GITHUB_TOKEN` from env as fallback
-- Requires Node v12 or higher
+name: Release
 
-## Quick start
+on:
+  push:
+    tags:
+      - 'v*'
 
-<!-- ```sh
-npx changelogithub preview
-``` -->
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-```sh
-npx changelogithub
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
 
 ## License
 
-MIT 2018-2020 [Steve Mao](https://github.com/stevemao)
 MIT 2022 [Anthony Fu](https://github.com/antfu)

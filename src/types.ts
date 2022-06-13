@@ -18,6 +18,7 @@ export interface ChangelogenOptions {
 
 export interface ChangelogOptions extends ChangelogenOptions {
   draft?: boolean
+  prerelease?: boolean
   name?: string
   token: string
 }
