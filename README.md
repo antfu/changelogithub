@@ -11,6 +11,7 @@ Generate changelog for GitHub releases from [Conventional Commits](https://www.c
 - Support exclamation mark as breaking change, e.g. `chore!: drop node v10`
 - Grouped scope in changelog
 - Create the release note, or update the existing one
+- List contributors
 
 ## Usage
 

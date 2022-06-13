@@ -24,3 +24,10 @@ export interface ChangelogOptions extends ChangelogenOptions {
   token: string
   breakingChangeMessage: string
 }
+
+export interface AuthorInfo {
+  commits: string[]
+  login?: string
+  email: string
+  name: string
+}

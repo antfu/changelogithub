@@ -2,9 +2,10 @@ import { getGitDiff, parseCommits } from 'changelogen'
 import type { ChangelogOptions } from './types'
 import { getCurrentGitBranch, getGitHubRepo, getLastGitTag, isPrerelease } from './git'
 import { generateMarkdown } from './markdown'
+import { getGitHubLogins } from './github'
 
 export async function generate(options: ChangelogOptions) {
-  const config: ChangelogOptions = {
+  const resolved: ChangelogOptions = {
     scopeMap: {},
     types: {
       feat: { title: '🚀 Features' },
@@ -15,17 +16,18 @@ export async function generate(options: ChangelogOptions) {
     ...options as any,
   }
 
-  config.from = config.from || await getLastGitTag()
-  config.to = config.to || await getCurrentGitBranch()
-  config.github = config.github || await getGitHubRepo()
-  config.prerelease = config.prerelease ?? isPrerelease(config.to)
+  resolved.from = resolved.from || await getLastGitTag()
+  resolved.to = resolved.to || await getCurrentGitBranch()
+  resolved.github = resolved.github || await getGitHubRepo()
+  resolved.prerelease = resolved.prerelease ?? isPrerelease(resolved.to)
 
-  if (config.to === config.from)
-    config.from = await getLastGitTag(-2)
+  if (resolved.to === resolved.from)
+    resolved.from = await getLastGitTag(-2)
 
-  const rawCommits = await getGitDiff(config.from, config.to)
-  const commits = parseCommits(rawCommits, config)
-  const md = generateMarkdown(commits, config)
+  const rawCommits = await getGitDiff(resolved.from, resolved.to)
+  const commits = parseCommits(rawCommits, resolved)
+  const contributors = await getGitHubLogins(commits, resolved)
+  const md = generateMarkdown(commits, resolved, contributors)
 
-  return { config, md, commits }
+  return { config: resolved, md, commits }
 }

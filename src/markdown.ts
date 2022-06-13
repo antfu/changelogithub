@@ -1,7 +1,7 @@
 import type { GitCommit } from 'changelogen'
 import { partition } from '@antfu/utils'
 import { upperFirst } from 'scule'
-import type { ChangelogOptions } from './types'
+import type { AuthorInfo, ChangelogOptions } from './types'
 
 function formatLine(commit: GitCommit, github: string) {
   const refs = commit.references.map((r) => {
@@ -15,12 +15,16 @@ function formatLine(commit: GitCommit, github: string) {
   return `- ${upperFirst(commit.description)} ${refs}`
 }
 
+function formatTitle(name: string) {
+  return `### &nbsp;&nbsp;&nbsp;${name}`
+}
+
 function formatSection(commits: GitCommit[], sectionName: string, config: ChangelogOptions) {
   if (!commits.length)
     return []
   const lines: string[] = [
     '',
-    `### &nbsp;&nbsp;&nbsp;${sectionName}`,
+    formatTitle(sectionName),
     '',
   ]
   const scopes = groupBy(commits, 'scope')
@@ -39,7 +43,7 @@ function formatSection(commits: GitCommit[], sectionName: string, config: Change
   return lines
 }
 
-export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions) {
+export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions, contributors?: AuthorInfo[]) {
   const lines: string[] = []
 
   const [breaking, changes] = partition(commits, c => c.isBreaking)
@@ -59,6 +63,15 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions)
 
   if (!lines.length)
     lines.push('*No significant changes*')
+
+  if (contributors?.length) {
+    lines.push(
+      '',
+      formatTitle('❤️ Contributors'),
+      '',
+      `&nbsp;&nbsp;&nbsp;Thanks to ${contributors.map(i => i.login ? `@${i.login}` : i.name).join(' | ')}`,
+    )
+  }
 
   const url = `https://github.com/${config.github}/compare/${config.from}...${config.to}`
 
