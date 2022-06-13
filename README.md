@@ -31,6 +31,10 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
 
+## Examples
+
+- [unocss/unocss](https://github.com/unocss/unocss/releases/tag/v0.39.0)
+
 ## License
 
 MIT 2022 [Anthony Fu](https://github.com/antfu)
