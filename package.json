@@ -30,7 +30,8 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "start": "node ./src/cli.js"
   },
   "dependencies": {
     "conventional-changelog": "^2.0.0",
