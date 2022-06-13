@@ -22,4 +22,5 @@ export interface ChangelogOptions extends ChangelogenOptions {
   dry?: boolean
   name?: string
   token: string
+  breakingChangeMessage: string
 }

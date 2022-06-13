@@ -13,11 +13,12 @@ export default async function changelogithub(
   const config: ChangelogOptions = {
     scopeMap: {},
     types: {
-      feat: { title: 'Features' },
-      fix: { title: 'Bug Fixes' },
-      perf: { title: 'Performance' },
-      docs: { title: 'Documentation' },
+      feat: { title: '🚀 Features' },
+      fix: { title: '🐞 Bug Fixes' },
+      perf: { title: '🏎 Performance' },
+      docs: { title: '📚 Documentation' },
     },
+    breakingChangeMessage: '🚨 Breaking Changes',
     ...options as any,
   }
 

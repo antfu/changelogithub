@@ -1,9 +1,10 @@
 import type { GitCommit } from 'changelogen'
-import type { ChangelogenOptions } from './types'
+import type { ChangelogOptions } from './types'
 
-export function generateMarkdown(commits: GitCommit[], config: ChangelogenOptions) {
+export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions) {
   const typeGroups = groupBy(commits, 'type')
 
+  const titlePadding = '&nbsp;&nbsp;&nbsp;'
   let markdown = ''
   const breakingChanges: string[] = []
 
@@ -30,15 +31,15 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogenOption
     if (!lines.length)
       continue
 
-    markdown += `\n\n### ${config.types[type].title}\n\n${lines.join('\n')}`
+    markdown += `\n\n### ${titlePadding}${config.types[type].title}\n\n${lines.join('\n')}`
   }
 
   if (breakingChanges.length)
-    markdown = `## Breaking Changes\n\n${breakingChanges.join('\n')}\n${markdown}`
+    markdown = `### ${titlePadding}${config.breakingChangeMessage}\n\n${breakingChanges.join('\n')}\n${markdown}`
 
   const url = `https://github.com/${config.github}/compare/${config.from}...${config.to}`
 
-  markdown += `\n\n> [Changes on GitHub](${url})\n`
+  markdown += `\n<br>\n> [Changes on GitHub](${url})\n`
 
   return markdown.trim()
 }
