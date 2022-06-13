@@ -46,7 +46,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions)
 
   const url = `https://github.com/${config.github}/compare/${config.from}...${config.to}`
 
-  markdown += `\n\n> [Changes on GitHub](${url})\n`
+  markdown += `\n\n##### ${titlePadding} [View changes on GitHub](${url})\n`
 
   return markdown.trim()
 }
