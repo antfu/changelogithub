@@ -7,7 +7,7 @@ specifiers:
   '@types/minimist': ^1.2.2
   '@types/semver': ^7.3.9
   bumpp: ^7.1.1
-  changelogen: ^0.1.1
+  changelogen: 0.1.1
   eslint: ^8.17.0
   esno: ^0.16.3
   execa: ^6.1.0

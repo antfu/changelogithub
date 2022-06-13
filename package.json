@@ -48,7 +48,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "changelogen": "^0.1.1",
+    "changelogen": "0.1.1",
     "execa": "^6.1.0",
     "kolorist": "^1.5.1",
     "minimist": "^1.2.6",
