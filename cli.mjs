@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import minimist from 'minimist'
-import changelogithub from './index'
+import changelogithub from './dist/index.mjs'
 
 const args = minimist(process.argv.slice(2), {
   boolean: [
@@ -21,4 +21,4 @@ const args = minimist(process.argv.slice(2), {
 
 args.token = args.token || process.env.GITHUB_TOKEN
 
-await changelogithub(args as any)
+changelogithub(args)

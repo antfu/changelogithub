@@ -32,8 +32,10 @@
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "bin": "./cli.mjs",
   "files": [
-    "dist/"
+    "dist",
+    "*.mjs"
   ],
   "engines": {
     "node": ">=12.0.0"
@@ -44,7 +46,7 @@
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp --commit --push --tag && npm publish",
-    "start": "esno src/cli.ts",
+    "start": "nr dev && node cli.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
