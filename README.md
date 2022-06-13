@@ -1,6 +1,8 @@
 # changelogithub
 
-Generate changelog for GitHub release from [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), powered by [changelogen](https://github.com/unjs/changelogen).
+[![NPM version](https://img.shields.io/npm/v/changelogithub?color=a1b858&label=)](https://www.npmjs.com/package/changelogithub)
+
+Generate changelog for GitHub releases from [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), powered by [changelogen](https://github.com/unjs/changelogen).
 
 [Changelog example](https://github.com/unocss/unocss/releases/tag/v0.39.0)
 
