@@ -6,8 +6,5 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "allowJs": true
-  },
-  "include": [
-    "./src/*.js"
-  ]
+  }
 }
