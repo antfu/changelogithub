@@ -22,7 +22,7 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    */
   dry?: boolean
   /**
-   * Wether includes the contributors section
+   * Whether to include contributors in release notes.
    *
    * @default true
    */
