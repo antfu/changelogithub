@@ -13,8 +13,8 @@ function formatLine(commit: GitCommit, options: ResolvedChangelogOptions) {
   }).join(' ')
 
   return options.capitalize
-    ? `- ${capitalize(commit.description)} ${refs}`
-    : `- ${commit.description} ${refs}`
+    ? `${capitalize(commit.description)} ${refs}`
+    : `${commit.description} ${refs}`
 }
 
 function formatTitle(name: string) {
@@ -29,18 +29,26 @@ function formatSection(commits: GitCommit[], sectionName: string, options: Resol
     formatTitle(sectionName),
     '',
   ]
+
   const scopes = groupBy(commits, 'scope')
   Object.keys(scopes).sort().forEach((scope) => {
     let padding = ''
-    if (scope) {
-      lines.push(`- **${options.scopeMap[scope] || scope}:**`)
+    let prefix = ''
+    const scopeText = `**${options.scopeMap[scope] || scope}**`
+    if (scope && options.groupByScope) {
+      lines.push(`- ${scopeText}:`)
       padding = '  '
     }
+    else if (scope) {
+      prefix = `${scopeText}: `
+    }
+
     lines.push(...scopes[scope]
       .reverse()
-      .map(i => padding + formatLine(i, options)),
+      .map(commit => `${padding}- ${prefix}${formatLine(commit, options)}`),
     )
   })
+
   return lines
 }
 
