@@ -1,0 +1,36 @@
+---
+name: Changelogithub
+description: Generate changelog for GitHub Release from conventional commits
+author: Anthony Fu
+inputs:
+  github:
+    description: The owner/repository name
+    default: ${{ github.repository }}
+    required: false
+  from:
+    description: 'The starting point of the changelog, defaults to the last tag'
+    required: false
+  to:
+    description: 'The ending point of the changelog, defaults to the current HEAD'
+    required: false
+  name:
+    description: The name of the release
+    required: false
+  draft:
+    description: Create a draft release
+    default: 'false'
+    required: false
+  prerelease:
+    description: Create a prerelease
+    default: 'false'
+    required: false
+  token:
+    description: The secret token to use.
+    default: ${{ github.token }}
+    required: false
+runs:
+  using: node16
+  main: dist/action.mjs
+branding:
+  icon: edit
+  color: gray-dark

@@ -4,6 +4,7 @@ export default defineBuildConfig({
   entries: [
     'src/index',
     'src/cli',
+    'src/action',
   ],
   declaration: true,
   clean: true,

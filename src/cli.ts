@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 import minimist from 'minimist'
-import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
-import { version } from '../package.json'
-import { generate, sendRelease } from './index'
+import { dim, red } from 'kolorist'
+import { run } from './index'
 
 const args = minimist(process.argv.slice(2), {
   boolean: [
@@ -26,32 +25,7 @@ const args = minimist(process.argv.slice(2), {
 
 args.token = args.token || process.env.GITHUB_TOKEN
 
-async function run() {
-  const { config, md } = await generate(args as any)
-
-  console.log()
-  console.log(dim(`changelo${bold('github')} `) + dim(`v${version}`))
-  console.log(bold(config.github))
-  console.log(cyan(config.from) + dim(' -> ') + blue(config.to))
-  console.log(dim('--------------'))
-  console.log()
-  console.log(md.replaceAll('&nbsp;', ''))
-  console.log()
-  console.log(dim('--------------'))
-
-  if (config.dry)
-    return console.log(yellow('Dry run, skipped.'))
-
-  if (!config.to.startsWith('v')) {
-    console.log(yellow('Release version must starts with `v`, skipped.'))
-    process.exitCode = 1
-    return
-  }
-
-  await sendRelease(config, md)
-}
-
-run()
+run(args as any)
   .catch((e) => {
     console.error(red(String(e)))
     console.error(dim(e.stack?.split('\n').slice(1).join('\n')))

@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@actions/core': ^1.8.2
   '@antfu/eslint-config': ^0.25.1
   '@antfu/utils': ^0.5.2
   '@types/conventional-changelog': ^3.1.1
@@ -22,6 +23,7 @@ specifiers:
   unbuild: ^0.7.4
 
 dependencies:
+  '@actions/core': 1.8.2
   '@antfu/utils': 0.5.2
   c12: 0.2.7
   changelogen: 0.1.1
@@ -45,6 +47,18 @@ devDependencies:
   unbuild: 0.7.4
 
 packages:
+
+  /@actions/core/1.8.2:
+    resolution: {integrity: sha512-FXcBL7nyik8K5ODeCKlxi+vts7torOkoDAKfeh61EAkAy1HAvwn9uVzZBY0f15YcQTcZZ2/iSGBFHEuioZWfDA==}
+    dependencies:
+      '@actions/http-client': 2.0.1
+    dev: false
+
+  /@actions/http-client/2.0.1:
+    resolution: {integrity: sha512-PIXiMVtz6VvyaRsGY268qvj57hXQEpsYogYOu2nrQhlf+XCGmZstmuZBbAybUl1nQGnvS1k1eEsQ69ZoD7xlSw==}
+    dependencies:
+      tunnel: 0.0.6
+    dev: false
 
   /@ampproject/remapping/2.2.0:
     resolution: {integrity: sha512-qRmjj8nj9qmLTQXXmaR1cck3UXSRMPrbsLJAasZpF+t3riI71BXed5ebIOYwQntykeZuhjsdweEc9BxH5Jc26w==}
@@ -3467,6 +3481,11 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /tunnel/0.0.6:
+    resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
+    engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
+    dev: false
 
   /type-check/0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
