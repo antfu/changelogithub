@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@antfu/utils": "^0.5.2",
+    "c12": "^0.2.7",
     "changelogen": "0.1.1",
     "execa": "^6.1.0",
     "kolorist": "^1.5.1",
