@@ -1,9 +1,7 @@
-import { execa } from 'execa'
 import semver from 'semver'
 
 export async function getGitHubRepo() {
-  const res = await execa('git', ['config', '--get', 'remote.origin.url'])
-  const url = String(res.stdout).trim()
+  const url = await execCommand('git', ['config', '--get', 'remote.origin.url'])
   const match = url.match(/github\.com[\/:]([\w\d._-]+?)\/([\w\d._-]+?)(\.git)?$/i)
   if (!match)
     throw new Error(`Can not parse GitHub repo from url ${url}`)
@@ -32,6 +30,6 @@ export function isPrerelease(version: string) {
 async function execCommand(cmd: string, args: string[]) {
   const { execa } = await import('execa')
   const res = await execa(cmd, args)
-  return res.stdout
+  return res.stdout.trim()
 }
 
