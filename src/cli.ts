@@ -39,11 +39,19 @@ async function run() {
   console.log()
   console.log(dim('--------------'))
 
-  if (config.dry)
-    return console.log(yellow('Dry run, skipped.'))
+  if (config.dry) {
+    console.log(yellow('Dry run. Release skipped.'))
+    return
+  }
 
   if (!config.to.startsWith('v')) {
-    console.log(yellow('Release version must starts with `v`, skipped.'))
+    console.log(yellow(`${config.to} is not a version tag. Release skipped.`))
+    process.exitCode = 1
+    return
+  }
+
+  if (!config.token) {
+    console.log(red('No GitHub token found, specify it via GITHUB_TOKEN env. Release skipped.'))
     process.exitCode = 1
     return
   }

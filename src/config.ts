@@ -17,7 +17,11 @@ export async function resolveConfig(options: ChangelogOptions) {
         perf: { title: '🏎 Performance' },
       },
       breakingChangeMessage: '🚨 Breaking Changes',
-    } as any,
+      from: '',
+      to: '',
+      github: '',
+      token: '',
+    },
     overrides: options,
   })
 
