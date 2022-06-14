@@ -50,6 +50,16 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
     breakingChanges?: string
     contributors?: string
   }
+  /**
+   * Capitalize commit messages
+   * @default true
+   */
+  capitalize?: boolean
+  /**
+   * Nest commit messages under their scopes
+   * @default true
+   */
+  groupByScope?: boolean
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>

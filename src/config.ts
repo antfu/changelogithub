@@ -21,6 +21,8 @@ export async function resolveConfig(options: ChangelogOptions) {
         contributors: '❤️ Contributors',
       },
       contributors: true,
+      capitalize: true,
+      groupByScope: true,
     },
     overrides: options,
   })
