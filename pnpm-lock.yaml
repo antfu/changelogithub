@@ -8,6 +8,7 @@ specifiers:
   '@types/minimist': ^1.2.2
   '@types/semver': ^7.3.9
   bumpp: ^7.1.1
+  c12: ^0.2.7
   changelogen: 0.1.1
   eslint: ^8.17.0
   esno: ^0.16.3
@@ -22,6 +23,7 @@ specifiers:
 
 dependencies:
   '@antfu/utils': 0.5.2
+  c12: 0.2.7
   changelogen: 0.1.1
   execa: 6.1.0
   kolorist: 1.5.1

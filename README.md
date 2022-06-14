@@ -46,6 +46,10 @@ jobs:
 
 It will be trigged whenever you push a tag to GitHub that starts with `v`.
 
+## Configuration
+
+You can put a configuration file in the project root, named as `changelogithug.config.{json,ts,js,mjs,cjs}`, `.changelogithubrc` or use the `changelogithub` field in `package.json`.
+
 ## Preview Locally
 
 ```bash

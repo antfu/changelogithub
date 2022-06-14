@@ -1,20 +1,24 @@
 import { getGitDiff, parseCommits } from 'changelogen'
+import { loadConfig } from 'c12'
 import type { ChangelogOptions } from './types'
 import { getCurrentGitBranch, getGitHubRepo, getLastGitTag, isPrerelease } from './git'
 import { generateMarkdown } from './markdown'
 import { getGitHubLogins } from './github'
 
 export async function generate(options: ChangelogOptions) {
-  const resolved: ChangelogOptions = {
-    scopeMap: {},
-    types: {
-      feat: { title: '🚀 Features' },
-      fix: { title: '🐞 Bug Fixes' },
-      perf: { title: '🏎 Performance' },
-    },
-    breakingChangeMessage: '🚨 Breaking Changes',
-    ...options as any,
-  }
+  const { config: resolved } = await loadConfig<ChangelogOptions>({
+    name: 'changelogithub',
+    defaults: {
+      scopeMap: {},
+      types: {
+        feat: { title: '🚀 Features' },
+        fix: { title: '🐞 Bug Fixes' },
+        perf: { title: '🏎 Performance' },
+      },
+      breakingChangeMessage: '🚨 Breaking Changes',
+    } as any,
+    overrides: options,
+  })
 
   resolved.from = resolved.from || await getLastGitTag()
   resolved.to = resolved.to || await getCurrentGitBranch()
