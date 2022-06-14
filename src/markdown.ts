@@ -2,16 +2,19 @@ import type { GitCommit } from 'changelogen'
 import { partition } from '@antfu/utils'
 import type { AuthorInfo, ResolvedChangelogOptions } from './types'
 
-function formatLine(commit: GitCommit, github: string) {
+function formatLine(commit: GitCommit, options: ResolvedChangelogOptions) {
   const refs = commit.references.map((r) => {
-    if (!github)
+    if (!options.github)
       return `\`${r}\``
     const url = r[0] === '#'
-      ? `https://github.com/${github}/issues/${r.slice(1)}`
-      : `https://github.com/${github}/commit/${r}`
+      ? `https://github.com/${options.github}/issues/${r.slice(1)}`
+      : `https://github.com/${options.github}/commit/${r}`
     return `[\`${r}\`](${url})`
   }).join(' ')
-  return `- ${capitalize(commit.description)} ${refs}`
+
+  return options.capitalize
+    ? `- ${capitalize(commit.description)} ${refs}`
+    : `- ${commit.description} ${refs}`
 }
 
 function formatTitle(name: string) {
@@ -35,7 +38,7 @@ function formatSection(commits: GitCommit[], sectionName: string, options: Resol
     }
     lines.push(...scopes[scope]
       .reverse()
-      .map(i => padding + formatLine(i, options.github)),
+      .map(i => padding + formatLine(i, options)),
     )
   })
   return lines
