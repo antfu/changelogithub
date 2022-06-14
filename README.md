@@ -35,16 +35,30 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - uses: antfu/changelogithub@main
 ```
 
 It will be trigged whenever you push a tag to GitHub that starts with `v`.
+
+The available options and their default values are:
+
+```yaml
+- uses: antfu/changelogithub@main
+  with:
+    github: ${{ github.repository }}
+    token: ${{ github.token }}
+    from: <last tag>
+    to: <current head>
+    draft: false
+    prerelease: false
+    name: ${{ github.release.tag_name }}
+```
+
+Or you can use the CLI:
+
+```bash
+$ npx changelogithub [--dry] [--draft/-d] [--github=REPOSITORY] [--name=NAME] [--token=TOKEN] [--from=TAG] [--to=TAG]
+```
 
 ## Configuration
 
