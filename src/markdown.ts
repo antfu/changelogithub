@@ -18,7 +18,7 @@ function formatTitle(name: string) {
   return `### &nbsp;&nbsp;&nbsp;${name}`
 }
 
-function formatSection(commits: GitCommit[], sectionName: string, config: ResolvedChangelogOptions) {
+function formatSection(commits: GitCommit[], sectionName: string, options: ResolvedChangelogOptions) {
   if (!commits.length)
     return []
   const lines: string[] = [
@@ -27,22 +27,21 @@ function formatSection(commits: GitCommit[], sectionName: string, config: Resolv
     '',
   ]
   const scopes = groupBy(commits, 'scope')
-  const keys = Object.keys(scopes).sort()
-  keys.forEach((key) => {
+  Object.keys(scopes).sort().forEach((scope) => {
     let padding = ''
-    if (key) {
-      lines.push(`- **${key}:**`)
+    if (scope) {
+      lines.push(`- **${options.scopeMap[scope] || scope}:**`)
       padding = '  '
     }
-    lines.push(...scopes[key]
+    lines.push(...scopes[scope]
       .reverse()
-      .map(i => padding + formatLine(i, config.github)),
+      .map(i => padding + formatLine(i, options.github)),
     )
   })
   return lines
 }
 
-export function generateMarkdown(commits: GitCommit[], config: ResolvedChangelogOptions, contributors?: AuthorInfo[]) {
+export function generateMarkdown(commits: GitCommit[], options: ResolvedChangelogOptions, contributors?: AuthorInfo[]) {
   const lines: string[] = []
 
   const [breaking, changes] = partition(commits, c => c.isBreaking)
@@ -50,13 +49,13 @@ export function generateMarkdown(commits: GitCommit[], config: ResolvedChangelog
   const group = groupBy(changes, 'type')
 
   lines.push(
-    ...formatSection(breaking, config.titles.breakingChanges!, config),
+    ...formatSection(breaking, options.titles.breakingChanges!, options),
   )
 
-  for (const type of Object.keys(config.types)) {
+  for (const type of Object.keys(options.types)) {
     const items = group[type] || []
     lines.push(
-      ...formatSection(items, config.types[type].title, config),
+      ...formatSection(items, options.types[type].title, options),
     )
   }
 
@@ -66,13 +65,13 @@ export function generateMarkdown(commits: GitCommit[], config: ResolvedChangelog
   if (contributors?.length) {
     lines.push(
       '',
-      formatTitle(config.titles.contributors!),
+      formatTitle(options.titles.contributors!),
       '',
       `&nbsp;&nbsp;&nbsp;Thanks to ${contributors.map(i => i.login ? `@${i.login}` : i.name).join(' | ')}`,
     )
   }
 
-  const url = `https://github.com/${config.github}/compare/${config.from}...${config.to}`
+  const url = `https://github.com/${options.github}/compare/${options.from}...${options.to}`
 
   lines.push('', `##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](${url})`)
 
