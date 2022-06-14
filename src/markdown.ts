@@ -1,6 +1,6 @@
 import type { GitCommit } from 'changelogen'
 import { partition } from '@antfu/utils'
-import type { AuthorInfo, ChangelogOptions } from './types'
+import type { AuthorInfo, ResolvedChangelogOptions } from './types'
 
 function formatLine(commit: GitCommit, github: string) {
   const refs = commit.references.map((r) => {
@@ -18,7 +18,7 @@ function formatTitle(name: string) {
   return `### &nbsp;&nbsp;&nbsp;${name}`
 }
 
-function formatSection(commits: GitCommit[], sectionName: string, config: ChangelogOptions) {
+function formatSection(commits: GitCommit[], sectionName: string, config: ResolvedChangelogOptions) {
   if (!commits.length)
     return []
   const lines: string[] = [
@@ -42,7 +42,7 @@ function formatSection(commits: GitCommit[], sectionName: string, config: Change
   return lines
 }
 
-export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions, contributors?: AuthorInfo[]) {
+export function generateMarkdown(commits: GitCommit[], config: ResolvedChangelogOptions, contributors?: AuthorInfo[]) {
   const lines: string[] = []
 
   const [breaking, changes] = partition(commits, c => c.isBreaking)
@@ -50,7 +50,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions,
   const group = groupBy(changes, 'type')
 
   lines.push(
-    ...formatSection(breaking, config.breakingChangeMessage, config),
+    ...formatSection(breaking, config.titles.breakingChanges!, config),
   )
 
   for (const type of Object.keys(config.types)) {
@@ -66,7 +66,7 @@ export function generateMarkdown(commits: GitCommit[], config: ChangelogOptions,
   if (contributors?.length) {
     lines.push(
       '',
-      formatTitle('❤️ Contributors'),
+      formatTitle(config.titles.contributors!),
       '',
       `&nbsp;&nbsp;&nbsp;Thanks to ${contributors.map(i => i.login ? `@${i.login}` : i.name).join(' | ')}`,
     )

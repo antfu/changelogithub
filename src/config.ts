@@ -1,7 +1,7 @@
 import { getCurrentGitBranch, getGitHubRepo, getLastGitTag, isPrerelease } from './git'
-import type { ChangelogOptions } from './types'
+import type { ChangelogOptions, ResolvedChangelogOptions } from './types'
 
-export function defineConfig(config: Partial<ChangelogOptions>) {
+export function defineConfig(config: ChangelogOptions) {
   return config
 }
 
@@ -16,11 +16,10 @@ export async function resolveConfig(options: ChangelogOptions) {
         fix: { title: '🐞 Bug Fixes' },
         perf: { title: '🏎 Performance' },
       },
-      breakingChangeMessage: '🚨 Breaking Changes',
-      from: '',
-      to: '',
-      github: '',
-      token: '',
+      titles: {
+        breakingChanges: '🚨 Breaking Changes',
+        contributors: '❤️ Contributors',
+      },
     },
     overrides: options,
   })
@@ -33,5 +32,5 @@ export async function resolveConfig(options: ChangelogOptions) {
   if (config.to === config.from)
     config.from = await getLastGitTag(-2)
 
-  return config
+  return config as ResolvedChangelogOptions
 }

@@ -51,6 +51,10 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
   if (info.login)
     return info
 
+  // token not provided, skip github resolving
+  if (!options.token)
+    return info
+
   try {
     const data = await $fetch(`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, {
       headers: getHeaders(options),

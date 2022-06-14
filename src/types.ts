@@ -16,14 +16,41 @@ export interface ChangelogenOptions {
   to: string
 }
 
-export interface ChangelogOptions extends ChangelogenOptions {
-  draft?: boolean
-  prerelease?: boolean
+export interface ChangelogOptions extends Partial<ChangelogenOptions> {
+  /**
+   * Dry run. Skip releasing to GitHub.
+   */
   dry?: boolean
+  /**
+   * Wether includes the contributors section
+   */
+  contributors?: boolean
+  /**
+   * Name of the release
+   */
   name?: string
-  token: string
-  breakingChangeMessage: string
+  /**
+   * Mark the release as a draft
+   */
+  draft?: boolean
+  /**
+   * Mark the release as prerelease
+   */
+  prerelease?: boolean
+  /**
+   * GitHub Token
+   */
+  token?: string
+  /**
+   * Custom titles
+   */
+  titles?: {
+    breakingChanges?: string
+    contributors?: string
+  }
 }
+
+export type ResolvedChangelogOptions = Required<ChangelogOptions>
 
 export interface AuthorInfo {
   commits: string[]
