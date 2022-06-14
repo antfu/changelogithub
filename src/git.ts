@@ -1,5 +1,3 @@
-import semver from 'semver'
-
 export async function getGitHubRepo() {
   const url = await execCommand('git', ['config', '--get', 'remote.origin.url'])
   const match = url.match(/github\.com[\/:]([\w\d._-]+?)\/([\w\d._-]+?)(\.git)?$/i)
@@ -18,13 +16,7 @@ export async function getLastGitTag(delta = -1) {
 }
 
 export function isPrerelease(version: string) {
-  version = version.startsWith('v') ? version.slice(1) : version
-  try {
-    return semver.parse(version)!.prerelease.length > 0
-  }
-  catch (e) {
-    return false
-  }
+  return version.includes('-')
 }
 
 async function execCommand(cmd: string, args: string[]) {

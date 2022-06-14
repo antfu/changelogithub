@@ -27,12 +27,13 @@ const args = minimist(process.argv.slice(2), {
 args.token = args.token || process.env.GITHUB_TOKEN
 
 async function run() {
-  const { config, md } = await generate(args as any)
-
   console.log()
   console.log(dim(`changelo${bold('github')} `) + dim(`v${version}`))
+
+  const { config, md, commits } = await generate(args as any)
+
   console.log(bold(config.github))
-  console.log(cyan(config.from) + dim(' -> ') + blue(config.to))
+  console.log(cyan(config.from) + dim(' -> ') + blue(config.to) + dim(` (${commits.length} commits)`))
   console.log(dim('--------------'))
   console.log()
   console.log(md.replaceAll('&nbsp;', ''))
@@ -45,7 +46,7 @@ async function run() {
   }
 
   if (!config.to.startsWith('v')) {
-    console.log(yellow(`${config.to} is not a version tag. Release skipped.`))
+    console.log(yellow(`Current ref "${bold(config.to)}" is not a version tag. Release skipped.`))
     process.exitCode = 1
     return
   }

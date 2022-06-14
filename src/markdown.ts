@@ -1,6 +1,5 @@
 import type { GitCommit } from 'changelogen'
 import { partition } from '@antfu/utils'
-import { upperFirst } from 'scule'
 import type { AuthorInfo, ChangelogOptions } from './types'
 
 function formatLine(commit: GitCommit, github: string) {
@@ -12,7 +11,7 @@ function formatLine(commit: GitCommit, github: string) {
       : `https://github.com/${github}/commit/${r}`
     return `[\`${r}\`](${url})`
   }).join(' ')
-  return `- ${upperFirst(commit.description)} ${refs}`
+  return `- ${capitalize(commit.description)} ${refs}`
 }
 
 function formatTitle(name: string) {
@@ -87,4 +86,8 @@ function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {
     groups[v].push(item)
   }
   return groups
+}
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
