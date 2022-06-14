@@ -79,7 +79,7 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
   return info
 }
 
-export async function getGitHubLogins(commits: GitCommit[], options: ChangelogOptions) {
+export async function getContributors(commits: GitCommit[], options: ChangelogOptions) {
   const map = new Map<string, AuthorInfo>()
   commits.forEach(({ authors, shortHash }) => {
     authors.forEach((a) => {

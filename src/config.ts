@@ -20,6 +20,7 @@ export async function resolveConfig(options: ChangelogOptions) {
         breakingChanges: '🚨 Breaking Changes',
         contributors: '❤️ Contributors',
       },
+      contributors: true,
     },
     overrides: options,
   })
