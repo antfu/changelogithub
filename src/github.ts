@@ -102,7 +102,7 @@ export async function getContributors(commits: GitCommit[], options: ChangelogOp
 
 export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   try {
-    await $fetch(`https://api.github.com/repos/${options.github}/git/tags/${tag}`, {
+    await $fetch(`https://api.github.com/repos/${options.github}/git/ref/tags/${tag}`, {
       headers: getHeaders(options),
     })
     return true

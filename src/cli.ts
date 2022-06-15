@@ -2,7 +2,7 @@
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
 import { version } from '../package.json'
-import { generate, isRefGitTag, sendRelease } from './index'
+import { generate, hasTagOnGitHub, sendRelease } from './index'
 
 const cli = cac('vitest')
 
@@ -50,17 +50,11 @@ cli
         return
       }
 
-      if (!await isRefGitTag(config.to)) {
-        console.log(yellow(`Current ref "${bold(config.to)}" not a tag. Release skipped.`))
+      if (!await hasTagOnGitHub(config.to, config)) {
+        console.log(yellow(`Current ref "${bold(config.to)}" is not available as tags on GitHub. Release skipped.`))
         process.exitCode = 1
         return
       }
-
-      // if (!await hasTagOnGitHub(config.to, config)) {
-      //   console.log(yellow(`Current ref "${bold(config.to)}" is not available as tags on GitHub. Release skipped.`))
-      //   process.exitCode = 1
-      //   return
-      // }
 
       await sendRelease(config, md)
     }
