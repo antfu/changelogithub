@@ -15,6 +15,17 @@ export async function getLastGitTag(delta = -1) {
   return tags[tags.length + delta]
 }
 
+export async function isRefGitTag(to: string) {
+  const { execa } = await import('execa')
+  try {
+    const res = await execa('git', ['describe', '--exact-match', to], { reject: true })
+    return res.stdout.trim() === to
+  }
+  catch {
+    return false
+  }
+}
+
 export function isPrerelease(version: string) {
   return version.includes('-')
 }

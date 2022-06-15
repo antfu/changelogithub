@@ -2,7 +2,7 @@
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
 import { version } from '../package.json'
-import { generate, hasTagOnGitHub, sendRelease } from './index'
+import { generate, hasTagOnGitHub, isRefGitTag, sendRelease } from './index'
 
 const cli = cac('vitest')
 
@@ -46,6 +46,12 @@ cli
 
       if (!config.token) {
         console.log(red('No GitHub token found, specify it via GITHUB_TOKEN env. Release skipped.'))
+        process.exitCode = 1
+        return
+      }
+
+      if (!await isRefGitTag(config.to)) {
+        console.log(yellow(`Current ref "${bold(config.to)}" not a tag. Release skipped.`))
         process.exitCode = 1
         return
       }
