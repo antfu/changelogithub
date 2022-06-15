@@ -2,7 +2,7 @@
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
 import { version } from '../package.json'
-import { generate, sendRelease } from './index'
+import { generate, hasTagOnGitHub, sendRelease } from './index'
 
 const cli = cac('vitest')
 
@@ -23,7 +23,6 @@ cli
 cli
   .command('')
   .action(async (args) => {
-    console.log(args)
     args.token = args.token || process.env.GITHUB_TOKEN
 
     try {
@@ -45,14 +44,14 @@ cli
         return
       }
 
-      if (!config.to.startsWith('v')) {
-        console.log(yellow(`Current ref "${bold(config.to)}" is not a version tag. Release skipped.`))
+      if (!config.token) {
+        console.log(red('No GitHub token found, specify it via GITHUB_TOKEN env. Release skipped.'))
         process.exitCode = 1
         return
       }
 
-      if (!config.token) {
-        console.log(red('No GitHub token found, specify it via GITHUB_TOKEN env. Release skipped.'))
+      if (!await hasTagOnGitHub(config.to, config)) {
+        console.log(yellow(`Current ref "${bold(config.to)}" is not available as tags on GitHub. Release skipped.`))
         process.exitCode = 1
         return
       }

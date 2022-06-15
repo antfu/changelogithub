@@ -99,3 +99,15 @@ export async function getContributors(commits: GitCommit[], options: ChangelogOp
   const resolved = await Promise.all(authors.map(info => resolveAuthorInfo(options, info)))
   return resolved.sort((a, b) => (a.login || a.name).localeCompare(b.login || b.name))
 }
+
+export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
+  try {
+    await $fetch(`https://api.github.com/repos/${options.github}/git/tags/${tag}`, {
+      headers: getHeaders(options),
+    })
+    return true
+  }
+  catch (e) {
+    return false
+  }
+}
