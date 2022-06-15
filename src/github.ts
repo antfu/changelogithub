@@ -97,7 +97,24 @@ export async function getContributors(commits: GitCommit[], options: ChangelogOp
   })
   const authors = Array.from(map.values())
   const resolved = await Promise.all(authors.map(info => resolveAuthorInfo(options, info)))
-  return resolved.sort((a, b) => (a.login || a.name).localeCompare(b.login || b.name))
+
+  const loginSet = new Set<string>()
+  const nameSet = new Set<string>()
+  return resolved
+    .sort((a, b) => (a.login || a.name).localeCompare(b.login || b.name))
+    .filter((i) => {
+      if (i.login && loginSet.has(i.login))
+        return false
+      if (i.login) {
+        loginSet.add(i.login)
+      }
+      else {
+        if (nameSet.has(i.name))
+          return false
+        nameSet.add(i.name)
+      }
+      return true
+    })
 }
 
 export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
