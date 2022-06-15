@@ -24,6 +24,7 @@ function formatTitle(name: string) {
 function formatSection(commits: GitCommit[], sectionName: string, options: ResolvedChangelogOptions) {
   if (!commits.length)
     return []
+
   const lines: string[] = [
     '',
     formatTitle(sectionName),

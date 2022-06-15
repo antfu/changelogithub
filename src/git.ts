@@ -18,7 +18,7 @@ export async function getLastGitTag(delta = -1) {
 export async function isRefGitTag(to: string) {
   const { execa } = await import('execa')
   try {
-    await execa('git', ['describe', '--exact-match', to], { reject: true })
+    await execa('git', ['show-ref', '--verify', `refs/tags/${to}`], { reject: true })
   }
   catch {
     return false
