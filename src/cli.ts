@@ -8,7 +8,6 @@ const args = minimist(process.argv.slice(2), {
   boolean: [
     'draft',
     'dry',
-    'contributors',
   ],
   string: [
     'token',
