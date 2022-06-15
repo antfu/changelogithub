@@ -4,7 +4,7 @@ import cac from 'cac'
 import { version } from '../package.json'
 import { generate, hasTagOnGitHub, sendRelease } from './index'
 
-const cli = cac('vitest')
+const cli = cac('changelogithub')
 
 cli
   .version(version)
