@@ -1,4 +1,4 @@
-import { getCurrentGitBranch, getGitHubRepo, getLastGitTag, isPrerelease } from './git'
+import { getCurrentGitBranch, getFirstGitCommit, getGitHubRepo, getLastGitTag, isPrerelease } from './git'
 import type { ChangelogOptions, ResolvedChangelogOptions } from './types'
 
 export function defineConfig(config: ChangelogOptions) {
@@ -33,7 +33,7 @@ export async function resolveConfig(options: ChangelogOptions) {
   config.prerelease = config.prerelease ?? isPrerelease(config.to)
 
   if (config.to === config.from)
-    config.from = await getLastGitTag(-2)
+    config.from = await getLastGitTag(-1) || await getFirstGitCommit()
 
   return config as ResolvedChangelogOptions
 }

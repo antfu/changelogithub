@@ -10,9 +10,9 @@ export async function getCurrentGitBranch() {
   return await execCommand('git', ['tag', '--points-at', 'HEAD']) || await execCommand('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
 }
 
-export async function getLastGitTag(delta = -1) {
+export async function getLastGitTag(delta = 0) {
   const tags = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=taggerdate']).then(r => r.split('\n'))
-  return tags[tags.length + delta]
+  return tags[tags.length + delta - 1]
 }
 
 export async function isRefGitTag(to: string) {
@@ -23,6 +23,10 @@ export async function isRefGitTag(to: string) {
   catch {
     return false
   }
+}
+
+export async function getFirstGitCommit() {
+  return await execCommand('git', ['rev-list', '--max-parents=0', 'HEAD'])
 }
 
 export function isPrerelease(version: string) {
