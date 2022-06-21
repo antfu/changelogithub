@@ -18,7 +18,6 @@ export async function resolveConfig(options: ChangelogOptions) {
       },
       titles: {
         breakingChanges: '🚨 Breaking Changes',
-        contributors: '❤️ Contributors',
       },
       contributors: true,
       capitalize: true,

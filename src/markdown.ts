@@ -1,8 +1,7 @@
-import type { GitCommit } from 'changelogen'
 import { partition } from '@antfu/utils'
-import type { AuthorInfo, ResolvedChangelogOptions } from './types'
+import type { Commit, ResolvedChangelogOptions } from './types'
 
-function formatLine(commit: GitCommit, options: ResolvedChangelogOptions) {
+function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
   const refs = commit.references.map((r) => {
     if (!options.github)
       return `\`${r}\``
@@ -12,16 +11,20 @@ function formatLine(commit: GitCommit, options: ResolvedChangelogOptions) {
     return `[\`${r}\`](${url})`
   }).join(' ')
 
-  return options.capitalize
-    ? `${capitalize(commit.description)} ${refs}`
-    : `${commit.description} ${refs}`
+  let authors = commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : i.name).join(' ').trim()
+  if (authors)
+    authors = `by ${authors}`
+
+  const description = options.capitalize ? capitalize(commit.description) : commit.description
+
+  return [description, refs, authors].filter(i => i?.trim()).join(' ')
 }
 
 function formatTitle(name: string) {
   return `### &nbsp;&nbsp;&nbsp;${name}`
 }
 
-function formatSection(commits: GitCommit[], sectionName: string, options: ResolvedChangelogOptions) {
+function formatSection(commits: Commit[], sectionName: string, options: ResolvedChangelogOptions) {
   if (!commits.length)
     return []
 
@@ -53,7 +56,7 @@ function formatSection(commits: GitCommit[], sectionName: string, options: Resol
   return lines
 }
 
-export function generateMarkdown(commits: GitCommit[], options: ResolvedChangelogOptions, contributors?: AuthorInfo[]) {
+export function generateMarkdown(commits: Commit[], options: ResolvedChangelogOptions) {
   const lines: string[] = []
 
   const [breaking, changes] = partition(commits, c => c.isBreaking)
@@ -73,15 +76,6 @@ export function generateMarkdown(commits: GitCommit[], options: ResolvedChangelo
 
   if (!lines.length)
     lines.push('*No significant changes*')
-
-  if (contributors?.length) {
-    lines.push(
-      '',
-      formatTitle(options.titles.contributors!),
-      '',
-      `&nbsp;&nbsp;&nbsp;Thanks to ${contributors.map(i => i.login ? `@${i.login}` : i.name).join(' | ')}`,
-    )
-  }
 
   const url = `https://github.com/${options.github}/compare/${options.from}...${options.to}`
 

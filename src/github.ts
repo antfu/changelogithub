@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { $fetch } from 'ohmyfetch'
 import { cyan, green } from 'kolorist'
-import type { GitCommit } from 'changelogen'
-import type { AuthorInfo, ChangelogOptions } from './types'
+import { notNullish } from '@antfu/utils'
+import type { AuthorInfo, ChangelogOptions, Commit } from './types'
 
 export async function sendRelease(
   options: ChangelogOptions,
@@ -79,12 +79,12 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
   return info
 }
 
-export async function getContributors(commits: GitCommit[], options: ChangelogOptions) {
+export async function resolveAuthors(commits: Commit[], options: ChangelogOptions) {
   const map = new Map<string, AuthorInfo>()
-  commits.forEach(({ authors, shortHash }) => {
-    authors.forEach((a) => {
+  commits.forEach((commit) => {
+    commit.resolvedAuthors = commit.authors.map((a) => {
       if (!a.email || !a.name)
-        return
+        return null
       if (!map.has(a.email)) {
         map.set(a.email, {
           commits: [],
@@ -92,8 +92,10 @@ export async function getContributors(commits: GitCommit[], options: ChangelogOp
           email: a.email,
         })
       }
-      map.get(a.email)!.commits.push(shortHash)
-    })
+      const info = map.get(a.email)!
+      info.commits.push(commit.shortHash)
+      return info
+    }).filter(notNullish)
   })
   const authors = Array.from(map.values())
   const resolved = await Promise.all(authors.map(info => resolveAuthorInfo(options, info)))

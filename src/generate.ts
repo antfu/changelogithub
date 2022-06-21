@@ -1,7 +1,7 @@
 import { getGitDiff, parseCommits } from 'changelogen'
 import type { ChangelogOptions } from './types'
 import { generateMarkdown } from './markdown'
-import { getContributors } from './github'
+import { resolveAuthors } from './github'
 import { resolveConfig } from './config'
 
 export async function generate(options: ChangelogOptions) {
@@ -9,8 +9,9 @@ export async function generate(options: ChangelogOptions) {
 
   const rawCommits = await getGitDiff(resolved.from, resolved.to)
   const commits = parseCommits(rawCommits, resolved)
-  const contributors = resolved.contributors ? await getContributors(commits, resolved) : undefined
-  const md = generateMarkdown(commits, resolved, contributors)
+  if (resolved.contributors)
+    await resolveAuthors(commits, resolved)
+  const md = generateMarkdown(commits, resolved)
 
   return { config: resolved, md, commits }
 }
