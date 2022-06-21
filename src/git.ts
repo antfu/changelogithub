@@ -10,6 +10,10 @@ export async function getCurrentGitBranch() {
   return await execCommand('git', ['tag', '--points-at', 'HEAD']) || await execCommand('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
 }
 
+export async function isRepoShallow() {
+  return (await execCommand('git', ['rev-parse', '--is-shallow-repository'])).trim() === 'true'
+}
+
 export async function getLastGitTag(delta = 0) {
   const tags = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=taggerdate']).then(r => r.split('\n'))
   return tags[tags.length + delta - 1]
