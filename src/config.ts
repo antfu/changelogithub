@@ -5,26 +5,28 @@ export function defineConfig(config: ChangelogOptions) {
   return config
 }
 
+const defaultConfig: ChangelogOptions = {
+  scopeMap: {},
+  types: {
+    feat: { title: '🚀 Features' },
+    fix: { title: '🐞 Bug Fixes' },
+    perf: { title: '🏎 Performance' },
+  },
+  titles: {
+    breakingChanges: '🚨 Breaking Changes',
+  },
+  contributors: true,
+  capitalize: true,
+  groupByScope: true,
+}
+
 export async function resolveConfig(options: ChangelogOptions) {
   const { loadConfig } = await import('c12')
-  const { config } = await loadConfig<ChangelogOptions>({
+  const config = await loadConfig<ChangelogOptions>({
     name: 'changelogithub',
-    defaults: {
-      scopeMap: {},
-      types: {
-        feat: { title: '🚀 Features' },
-        fix: { title: '🐞 Bug Fixes' },
-        perf: { title: '🏎 Performance' },
-      },
-      titles: {
-        breakingChanges: '🚨 Breaking Changes',
-      },
-      contributors: true,
-      capitalize: true,
-      groupByScope: true,
-    },
+    defaults: defaultConfig,
     overrides: options,
-  })
+  }).then(r => r.config || defaultConfig)
 
   config.from = config.from || await getLastGitTag()
   config.to = config.to || await getCurrentGitBranch()
