@@ -1,15 +1,35 @@
 import { partition } from '@antfu/utils'
 import type { Commit, ResolvedChangelogOptions } from './types'
 
+function formatReferences(references: string[], github: string, type: 'pr' | 'hash'): string {
+  const refs = references
+    .filter((ref) => {
+      if (type === 'pr')
+        return ref[0] === '#'
+
+      return ref[0] !== '#'
+    })
+    .map((ref) => {
+      if (!github)
+        return ref
+
+      if (type === 'pr')
+        return `https://github.com/${github}/issues/${ref.slice(1)}`
+
+      return `[${ref}](https://github.com/${github}/commit/${ref})`
+    })
+
+  const referencesString = join(refs).trim()
+
+  if (type === 'pr')
+    return referencesString && `in ${referencesString}`
+
+  return referencesString && `(${referencesString})`
+}
+
 function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
-  const refs = commit.references.map((r) => {
-    if (!options.github)
-      return `\`${r}\``
-    const url = r[0] === '#'
-      ? `https://github.com/${options.github}/issues/${r.slice(1)}`
-      : `https://github.com/${options.github}/commit/${r}`
-    return `[\`${r}\`](${url})`
-  }).join(' ')
+  const prRefs = formatReferences(commit.references, options.github, 'pr')
+  const hashRefs = formatReferences(commit.references, options.github, 'hash')
 
   let authors = join(commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : `**${i.name}**`))?.trim()
   if (authors)
@@ -17,7 +37,7 @@ function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
 
   const description = options.capitalize ? capitalize(commit.description) : commit.description
 
-  return [description, refs, authors].filter(i => i?.trim()).join(' ')
+  return [description, authors, prRefs, hashRefs].filter(i => i?.trim()).join(' ')
 }
 
 function formatTitle(name: string) {
