@@ -65,6 +65,11 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * @default true
    */
   groupByScope?: boolean
+  /**
+   * Use emojis in section titles
+   * @default true
+   */
+  emojis?: boolean
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>
