@@ -17,7 +17,7 @@ cli
   .option('--prerelease', 'Mark release as prerelease')
   .option('-d, --draft', 'Mark release as draft')
   .option('--capitalize', 'Should capitalize for each comment message')
-  .option('--emojis', 'Do not use emojis in section titles', { default: true })
+  .option('--emoji', 'Use emojis in section titles', { default: true })
   .option('--dry', 'Dry run')
   .help()
 

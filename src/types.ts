@@ -69,7 +69,7 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * Use emojis in section titles
    * @default true
    */
-  emojis?: boolean
+  emoji?: boolean
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>
