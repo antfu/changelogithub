@@ -17,7 +17,7 @@ const defaultConfig: ChangelogOptions = {
   },
   contributors: true,
   capitalize: true,
-  groupByScope: true,
+  group: true,
 }
 
 export async function resolveConfig(options: ChangelogOptions) {
