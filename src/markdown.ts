@@ -11,7 +11,7 @@ function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
     return `[\`${r}\`](${url})`
   }).join(' ')
 
-  let authors = commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : i.name).join(' ').trim()
+  let authors = join(commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : `**${i.name}**`))?.trim()
   if (authors)
     authors = `by ${authors}`
 
@@ -95,4 +95,17 @@ function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {
 
 function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+function join(array?: string[], glue = ', ', finalGlue = ' and '): string {
+  if (!array || array.length === 0)
+    return ''
+
+  if (array.length === 1)
+    return array[0]
+
+  if (array.length === 2)
+    return array.join(finalGlue)
+
+  return `${array.slice(0, -1).join(glue)}${finalGlue}${array.slice(-1)}`
 }
