@@ -64,7 +64,7 @@ function formatSection(commits: Commit[], sectionName: string, options: Resolved
     let padding = ''
     let prefix = ''
     const scopeText = `**${options.scopeMap[scope] || scope}**`
-    if (scope && options.groupByScope) {
+    if (scope && options.group) {
       lines.push(`- ${scopeText}:`)
       padding = '  '
     }
