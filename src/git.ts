@@ -15,7 +15,7 @@ export async function isRepoShallow() {
 }
 
 export async function getLastGitTag(delta = 0) {
-  const tags = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=taggerdate']).then(r => r.split('\n'))
+  const tags = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=creatordate']).then(r => r.split('\n'))
   return tags[tags.length + delta - 1]
 }
 
