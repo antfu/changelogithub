@@ -36,7 +36,7 @@ cli
       console.log(cyan(config.from) + dim(' -> ') + blue(config.to) + dim(` (${commits.length} commits)`))
       console.log(dim('--------------'))
       console.log()
-      console.log(md.replaceAll('&nbsp;', ''))
+      console.log(md.replace(/\&nbsp;/g, ''))
       console.log()
       console.log(dim('--------------'))
 
