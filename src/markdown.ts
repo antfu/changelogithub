@@ -37,9 +37,14 @@ function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
   if (authors)
     authors = `by ${authors}`
 
+  let refs = [authors, prRefs, hashRefs].filter(i => i?.trim()).join(' ')
+
+  if (options.sup && refs)
+    refs = `<sup>${refs}</sup>`
+
   const description = options.capitalize ? capitalize(commit.description) : commit.description
 
-  return [description, authors, prRefs, hashRefs].filter(i => i?.trim()).join(' ')
+  return [description, refs].filter(i => i?.trim()).join(' ')
 }
 
 function formatTitle(name: string, options: ResolvedChangelogOptions) {
