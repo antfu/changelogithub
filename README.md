@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: 16.x
 
-      - run: npx changelogithub
+      - run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 ```
