@@ -33,7 +33,7 @@ function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
   const prRefs = formatReferences(commit.references, options.github, 'pr')
   const hashRefs = formatReferences(commit.references, options.github, 'hash')
 
-  let authors = join(commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : `**${i.name}**`))?.trim()
+  let authors = join([...new Set(commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : `**${i.name}**`))])?.trim()
   if (authors)
     authors = `by ${authors}`
 
