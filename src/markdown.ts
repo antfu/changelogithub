@@ -39,8 +39,8 @@ function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
 
   let refs = [authors, prRefs, hashRefs].filter(i => i?.trim()).join(' ')
 
-  if (options.sup && refs)
-    refs = `<sup>${refs}</sup>`
+  if (refs)
+    refs = `&nbsp;-&nbsp; ${refs}`
 
   const description = options.capitalize ? capitalize(commit.description) : commit.description
 

@@ -19,7 +19,6 @@ cli
   .option('--capitalize', 'Should capitalize for each comment message')
   .option('--emoji', 'Use emojis in section titles', { default: true })
   .option('--group', 'Nest commit messages under their scopes')
-  .option('--sup', 'Use <sup> for author info', { default: true })
   .option('--dry', 'Dry run')
   .help()
 
