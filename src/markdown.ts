@@ -8,7 +8,6 @@ function formatReferences(references: string[], github: string, type: 'pr' | 'ha
     .filter((ref) => {
       if (type === 'pr')
         return ref[0] === '#'
-
       return ref[0] !== '#'
     })
     .map((ref) => {
@@ -17,16 +16,14 @@ function formatReferences(references: string[], github: string, type: 'pr' | 'ha
 
       if (type === 'pr')
         return `https://github.com/${github}/issues/${ref.slice(1)}`
-
-      return `[<samp>${ref.slice(0, 5)}</samp>](https://github.com/${github}/commit/${ref})`
+      return `[<samp>(${ref.slice(0, 5)})</samp>](https://github.com/${github}/commit/${ref})`
     })
 
   const referencesString = join(refs).trim()
 
   if (type === 'pr')
     return referencesString && `in ${referencesString}`
-
-  return referencesString && `(${referencesString})`
+  return referencesString
 }
 
 function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
