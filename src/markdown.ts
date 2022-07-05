@@ -1,4 +1,5 @@
 import { partition } from '@antfu/utils'
+import { convert } from 'convert-gitmoji'
 import type { Commit, ResolvedChangelogOptions } from './types'
 
 const emojisRE = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g
@@ -114,7 +115,7 @@ export function generateMarkdown(commits: Commit[], options: ResolvedChangelogOp
 
   lines.push('', `##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](${url})`)
 
-  return lines.join('\n').trim()
+  return convert(lines.join('\n').trim(), true)
 }
 
 function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {
