@@ -31,7 +31,7 @@ export function parseGitCommit(commit: RawGitCommit, config: ChangelogenOptions)
 
   const matches = description.matchAll(ReferencesRegex)
   for (const m of matches) {
-    const reference = m[0];
+    const reference = m[0]
     // Remove brackets for references
     references.push(reference.slice(1, reference.length - 1))
   }
