@@ -1,4 +1,5 @@
 import type { GitCommit } from 'changelogen'
+import type { Preset } from './presets'
 
 export interface GitHubRepo {
   owner: string
@@ -70,9 +71,16 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * @default true
    */
   emoji?: boolean
+  /**
+   * Use a formatting preset
+   * @default default
+   */
+  preset?: 'github' | 'default'
 }
 
-export type ResolvedChangelogOptions = Required<ChangelogOptions>
+export type ResolvedChangelogOptions = Required<ChangelogOptions> & {
+  preset: Preset
+}
 
 export interface AuthorInfo {
   commits: string[]
