@@ -43,6 +43,7 @@
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
+    "test": "vitest",
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp --commit --push --tag",
@@ -69,6 +70,7 @@
     "eslint": "^8.18.0",
     "esno": "^0.16.3",
     "typescript": "^4.7.4",
-    "unbuild": "^0.7.4"
+    "unbuild": "^0.7.4",
+    "vitest": "^0.18.0"
   }
 }
