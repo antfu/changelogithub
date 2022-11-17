@@ -82,7 +82,7 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
 export async function resolveAuthors(commits: Commit[], options: ChangelogOptions) {
   const map = new Map<string, AuthorInfo>()
   commits.forEach((commit) => {
-    commit.resolvedAuthors = commit.authors.map((a) => {
+    commit.resolvedAuthors = commit.authors.map((a, idx) => {
       if (!a.email || !a.name)
         return null
       if (!map.has(a.email)) {
@@ -93,7 +93,11 @@ export async function resolveAuthors(commits: Commit[], options: ChangelogOption
         })
       }
       const info = map.get(a.email)!
-      info.commits.push(commit.shortHash)
+
+      // record commits only for the first author
+      if (idx === 0)
+        info.commits.push(commit.shortHash)
+
       return info
     }).filter(notNullish)
   })
