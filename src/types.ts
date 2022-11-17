@@ -1,4 +1,6 @@
-import type { GitCommit } from 'changelogen'
+import type { ChangelogConfig, GitCommit } from 'changelogen'
+
+export type ChangelogenOptions = ChangelogConfig
 
 export interface GitHubRepo {
   owner: string
@@ -8,14 +10,6 @@ export interface GitHubRepo {
 export interface GitHubAuth {
   token: string
   url: string
-}
-
-export interface ChangelogenOptions {
-  types: Record<string, { title: string }>
-  scopeMap: Record<string, string>
-  github: string
-  from: string
-  to: string
 }
 
 export interface Commit extends GitCommit {

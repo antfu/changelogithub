@@ -1,34 +1,34 @@
 import { partition } from '@antfu/utils'
+import type { Reference } from 'changelogen'
 import { convert } from 'convert-gitmoji'
 import type { Commit, ResolvedChangelogOptions } from './types'
 
 const emojisRE = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g
 
-function formatReferences(references: string[], github: string, type: 'pr' | 'hash'): string {
+function formatReferences(references: Reference[], github: string, type: 'issues' | 'hash'): string {
   const refs = references
-    .filter((ref) => {
-      if (type === 'pr')
-        return ref[0] === '#'
-      return ref[0] !== '#'
+    .filter((i) => {
+      if (type === 'issues')
+        return i.type === 'issue' || i.type === 'pull-request'
+      return i.type === 'hash'
     })
     .map((ref) => {
       if (!github)
-        return ref
-
-      if (type === 'pr')
-        return `https://github.com/${github}/issues/${ref.slice(1)}`
-      return `[<samp>(${ref.slice(0, 5)})</samp>](https://github.com/${github}/commit/${ref})`
+        return ref.value
+      if (ref.type === 'pull-request' || ref.type === 'issue')
+        return `https://github.com/${github}/issues/${ref.value.slice(1)}`
+      return `[<samp>(${ref.value.slice(0, 5)})</samp>](https://github.com/${github}/commit/${ref.value})`
     })
 
   const referencesString = join(refs).trim()
 
-  if (type === 'pr')
+  if (type === 'issues')
     return referencesString && `in ${referencesString}`
   return referencesString
 }
 
 function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
-  const prRefs = formatReferences(commit.references, options.github, 'pr')
+  const prRefs = formatReferences(commit.references, options.github, 'issues')
   const hashRefs = formatReferences(commit.references, options.github, 'hash')
 
   let authors = join([...new Set(commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : `**${i.name}**`))])?.trim()
