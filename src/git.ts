@@ -34,7 +34,7 @@ export async function getFirstGitCommit() {
 }
 
 export function isPrerelease(version: string) {
-  return version.includes('-')
+  return !/^[^.]*[\d.]+$/.test(version)
 }
 
 async function execCommand(cmd: string, args: string[]) {
