@@ -22,6 +22,9 @@ In GitHub Actions:
 
 name: Release
 
+permissions:
+  contents: write
+
 on:
   push:
     tags:
