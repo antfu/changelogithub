@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import fs from 'fs/promises'
+import fs from 'node:fs/promises'
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
 import { version } from '../package.json'
