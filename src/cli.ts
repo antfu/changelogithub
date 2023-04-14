@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import fs from 'fs/promises'
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
 import { version } from '../package.json'
@@ -16,6 +17,7 @@ cli
   .option('--contributors', 'Show contributors section')
   .option('--prerelease', 'Mark release as prerelease')
   .option('-d, --draft', 'Mark release as draft')
+  .option('--output <path>', 'Output to file instead of sending to GitHub')
   .option('--capitalize', 'Should capitalize for each comment message')
   .option('--emoji', 'Use emojis in section titles', { default: true })
   .option('--group', 'Nest commit messages under their scopes')
@@ -48,6 +50,12 @@ cli
       if (!config.token) {
         console.error(red('No GitHub token found, specify it via GITHUB_TOKEN env. Release skipped.'))
         process.exitCode = 1
+        return
+      }
+
+      if (typeof config.output === 'string') {
+        await fs.writeFile(config.output, md, 'utf-8')
+        console.log(yellow(`Saved to ${config.output}`))
         return
       }
 
