@@ -63,12 +63,17 @@ function formatSection(commits: Commit[], sectionName: string, options: Resolved
   ]
 
   const scopes = groupBy(commits, 'scope')
+  let useScopeGroup = options.group
+
+  // group scopes only when one of the scope have multiple commits
+  if (!Object.entries(scopes).some(([k, v]) => k && v.length > 1))
+    useScopeGroup = false
 
   Object.keys(scopes).sort().forEach((scope) => {
     let padding = ''
     let prefix = ''
     const scopeText = `**${options.scopeMap[scope] || scope}**`
-    if (scope && options.group && scopes[scope].length > 1) {
+    if (scope && (useScopeGroup === true || (useScopeGroup === 'multiple' && scopes[scope].length > 1))) {
       lines.push(`- ${scopeText}:`)
       padding = '  '
     }

@@ -47,7 +47,8 @@ test('parse', async () => {
     - Throw on shallow repo - by **Anthony Fu** [<samp>(f1c1f)</samp>](https://github.com/antfu/changelogithub/commit/f1c1fad)
     - Improve how references are displayed - by **Enzo Innocenzi** in https://github.com/antfu/changelogithub/issues/19 [<samp>(cdf8f)</samp>](https://github.com/antfu/changelogithub/commit/cdf8fe5)
     - Support \`--no-emoji\` - by **Enzo Innocenzi** in https://github.com/antfu/changelogithub/issues/20 [<samp>(e94ba)</samp>](https://github.com/antfu/changelogithub/commit/e94ba4a)
-    - **contributors**: Improve author list - by **Enzo Innocenzi** in https://github.com/antfu/changelogithub/issues/18 [<samp>(8d8d9)</samp>](https://github.com/antfu/changelogithub/commit/8d8d914)
+    - **contributors**:
+     - Improve author list - by **Enzo Innocenzi** in https://github.com/antfu/changelogithub/issues/18 [<samp>(8d8d9)</samp>](https://github.com/antfu/changelogithub/commit/8d8d914)
     - **style**:
      - Group scopes only when one of the scope have multiple commits - by **Anthony Fu** [<samp>(312f7)</samp>](https://github.com/antfu/changelogithub/commit/312f796)
      - Use \`<sup>\` for author info - by **Anthony Fu** [<samp>(b51c0)</samp>](https://github.com/antfu/changelogithub/commit/b51c075)
