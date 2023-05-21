@@ -58,7 +58,7 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * Nest commit messages under their scopes
    * @default true
    */
-  group?: boolean
+  group?: boolean | 'multiple'
   /**
    * Use emojis in section titles
    * @default true
