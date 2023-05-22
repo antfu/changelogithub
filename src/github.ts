@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { $fetch } from 'ohmyfetch'
-import { cyan, green } from 'kolorist'
+import { cyan, green, yellow } from 'kolorist'
 import { notNullish } from '@antfu/utils'
 import type { AuthorInfo, ChangelogOptions, Commit } from './types'
 
@@ -11,6 +11,7 @@ export async function sendRelease(
   const headers = getHeaders(options)
   let url = `https://api.github.com/repos/${options.github}/releases`
   let method = 'POST'
+
   try {
     const exists = await $fetch(`https://api.github.com/repos/${options.github}/releases/tags/${options.to}`, {
       headers,
@@ -31,13 +32,25 @@ export async function sendRelease(
     tag_name: options.to,
   }
 
-  console.log(cyan(method === 'POST' ? 'Creating release notes...' : 'Updating release notes...'))
-  const res = await $fetch(url, {
-    method,
-    body: JSON.stringify(body),
-    headers,
-  })
-  console.log(green(`Released on ${res.html_url}`))
+  const webUrl = `https://github.com/${options.github}/releases/new?title=${encodeURIComponent(String(body.name))}&body=${encodeURIComponent(String(body.body))}&tag=${encodeURIComponent(String(options.to))}&prerelease=${options.prerelease}`
+
+  try {
+    console.log(cyan(method === 'POST' ? 'Creating release notes...' : 'Updating release notes...'))
+    const res = await $fetch(url, {
+      method,
+      body: JSON.stringify(body),
+      headers,
+    })
+    console.log(green(`Released on ${res.html_url}`))
+  }
+  catch (e) {
+    console.log()
+    console.error(red('Failed to create the release. Using the following link to create it manually:'))
+    console.error(yellow(webUrl))
+    console.log()
+
+    throw e
+  }
 }
 
 function getHeaders(options: ChangelogOptions) {
@@ -133,4 +146,8 @@ export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   catch (e) {
     return false
   }
+}
+
+function red(arg0: string): any {
+  throw new Error('Function not implemented.')
 }
