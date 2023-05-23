@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { $fetch } from 'ohmyfetch'
-import { cyan, green, yellow } from 'kolorist'
+import { cyan, green, red, yellow } from 'kolorist'
 import { notNullish } from '@antfu/utils'
 import type { AuthorInfo, ChangelogOptions, Commit } from './types'
 
@@ -146,8 +146,4 @@ export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   catch (e) {
     return false
   }
-}
-
-function red(arg0: string): any {
-  throw new Error('Function not implemented.')
 }
