@@ -29,11 +29,14 @@ cli
   .action(async (args) => {
     args.token = args.token || process.env.GITHUB_TOKEN
 
+    let webUrl = ''
+
     try {
       console.log()
       console.log(dim(`changelo${bold('github')} `) + dim(`v${version}`))
 
       const { config, md, commits } = await generate(args as any)
+      webUrl = `https://github.com/${config.github}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(md))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
 
       console.log(cyan(config.from) + dim(' -> ') + blue(config.to) + dim(` (${commits.length} commits)`))
       console.log(dim('--------------'))
@@ -42,14 +45,23 @@ cli
       console.log()
       console.log(dim('--------------'))
 
+      function printWebUrl() {
+        console.log()
+        console.error(yellow('Using the following link to create it manually:'))
+        console.error(yellow(webUrl))
+        console.log()
+      }
+
       if (config.dry) {
         console.log(yellow('Dry run. Release skipped.'))
+        printWebUrl()
         return
       }
 
       if (!config.token) {
         console.error(red('No GitHub token found, specify it via GITHUB_TOKEN env. Release skipped.'))
         process.exitCode = 1
+        printWebUrl()
         return
       }
 
@@ -62,12 +74,14 @@ cli
       if (!await hasTagOnGitHub(config.to, config)) {
         console.error(yellow(`Current ref "${bold(config.to)}" is not available as tags on GitHub. Release skipped.`))
         process.exitCode = 1
+        printWebUrl()
         return
       }
 
       if (!commits.length && await isRepoShallow()) {
         console.error(yellow('The repo seems to be clone shallowly, which make changelog failed to generate. You might want to specify `fetch-depth: 0` in your CI config.'))
         process.exitCode = 1
+        printWebUrl()
         return
       }
 
@@ -77,6 +91,14 @@ cli
       console.error(red(String(e)))
       if (e?.stack)
         console.error(dim(e.stack?.split('\n').slice(1).join('\n')))
+
+      if (webUrl) {
+        console.log()
+        console.error(red('Failed to create the release. Using the following link to create it manually:'))
+        console.error(yellow(webUrl))
+        console.log()
+      }
+
       process.exit(1)
     }
   })

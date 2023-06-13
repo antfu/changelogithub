@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { $fetch } from 'ohmyfetch'
-import { cyan, green, red, yellow } from 'kolorist'
+import { cyan, green } from 'kolorist'
 import { notNullish } from '@antfu/utils'
 import type { AuthorInfo, ChangelogOptions, Commit } from './types'
 
@@ -31,26 +31,13 @@ export async function sendRelease(
     prerelease: options.prerelease,
     tag_name: options.to,
   }
-
-  const webUrl = `https://github.com/${options.github}/releases/new?title=${encodeURIComponent(String(body.name))}&body=${encodeURIComponent(String(body.body))}&tag=${encodeURIComponent(String(options.to))}&prerelease=${options.prerelease}`
-
-  try {
-    console.log(cyan(method === 'POST' ? 'Creating release notes...' : 'Updating release notes...'))
-    const res = await $fetch(url, {
-      method,
-      body: JSON.stringify(body),
-      headers,
-    })
-    console.log(green(`Released on ${res.html_url}`))
-  }
-  catch (e) {
-    console.log()
-    console.error(red('Failed to create the release. Using the following link to create it manually:'))
-    console.error(yellow(webUrl))
-    console.log()
-
-    throw e
-  }
+  console.log(cyan(method === 'POST' ? 'Creating release notes...' : 'Updating release notes...'))
+  const res = await $fetch(url, {
+    method,
+    body: JSON.stringify(body),
+    headers,
+  })
+  console.log(green(`Released on ${res.html_url}`))
 }
 
 function getHeaders(options: ChangelogOptions) {
