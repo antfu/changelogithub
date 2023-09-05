@@ -14,9 +14,25 @@ export async function isRepoShallow() {
   return (await execCommand('git', ['rev-parse', '--is-shallow-repository'])).trim() === 'true'
 }
 
-export async function getLastGitTag(delta = 0) {
-  const tags = await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=creatordate']).then(r => r.split('\n'))
-  return tags[tags.length + delta - 1]
+export async function getGitTags() {
+  return (await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=creatordate']).then(r => r.split('\n')))
+    .reverse()
+}
+
+export async function getLastMatchingTag(inputTag: string) {
+  const isVersion = inputTag[0] === 'v'
+  const isPrerelease = inputTag[0] === 'v' && inputTag.includes('-')
+  const tags = await getGitTags()
+
+  let tag: string | undefined
+  // Doing a stable release, find the last stable release to compare with
+  if (!isPrerelease && isVersion)
+    tag = tags.find(tag => tag !== inputTag && tag[0] === 'v' && !tag.includes('-'))
+
+  // Fallback to the last tag, that are not the input tag
+  tag ||= tags.find(tag => tag !== inputTag)
+
+  return tag
 }
 
 export async function isRefGitTag(to: string) {

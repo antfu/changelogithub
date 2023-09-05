@@ -1,4 +1,4 @@
-import { getCurrentGitBranch, getFirstGitCommit, getGitHubRepo, getLastGitTag, isPrerelease } from './git'
+import { getCurrentGitBranch, getFirstGitCommit, getGitHubRepo, getLastMatchingTag, isPrerelease } from './git'
 import type { ChangelogOptions, ResolvedChangelogOptions } from './types'
 
 export function defineConfig(config: ChangelogOptions) {
@@ -28,18 +28,14 @@ export async function resolveConfig(options: ChangelogOptions) {
     overrides: options,
   }).then(r => r.config || defaultConfig)
 
-  config.from = config.from || await getLastGitTag()
   config.to = config.to || await getCurrentGitBranch()
+  config.from = config.from || await getLastMatchingTag(config.to) || await getFirstGitCommit()
   // @ts-expect-error backward compatibility
   config.repo = config.repo || config.github || await getGitHubRepo()
+  config.prerelease = config.prerelease ?? isPrerelease(config.to)
 
   if (typeof config.repo !== 'string')
     throw new Error(`Invalid GitHub repository, expected a string but got ${JSON.stringify(config.repo)}`)
-
-  config.prerelease = config.prerelease ?? isPrerelease(config.to)
-
-  if (config.to === config.from)
-    config.from = await getLastGitTag(-1) || await getFirstGitCommit()
 
   return config as ResolvedChangelogOptions
 }
