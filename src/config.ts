@@ -30,7 +30,12 @@ export async function resolveConfig(options: ChangelogOptions) {
 
   config.from = config.from || await getLastGitTag()
   config.to = config.to || await getCurrentGitBranch()
-  config.github = config.github || await getGitHubRepo()
+  // @ts-expect-error backward compatibility
+  config.repo = config.repo || config.github || await getGitHubRepo()
+
+  if (typeof config.repo !== 'string')
+    throw new Error(`Invalid GitHub repository, expected a string but got ${JSON.stringify(config.repo)}`)
+
   config.prerelease = config.prerelease ?? isPrerelease(config.to)
 
   if (config.to === config.from)

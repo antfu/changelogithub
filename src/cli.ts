@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs/promises'
+import process from 'node:process'
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
 import { version } from '../package.json'
@@ -36,7 +37,7 @@ cli
       console.log(dim(`changelo${bold('github')} `) + dim(`v${version}`))
 
       const { config, md, commits } = await generate(args as any)
-      webUrl = `https://github.com/${config.github}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(md))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
+      webUrl = `https://github.com/${config.repo}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(md))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
 
       console.log(cyan(config.from) + dim(' -> ') + blue(config.to) + dim(` (${commits.length} commits)`))
       console.log(dim('--------------'))

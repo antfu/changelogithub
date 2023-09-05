@@ -28,8 +28,8 @@ function formatReferences(references: Reference[], github: string, type: 'issues
 }
 
 function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
-  const prRefs = formatReferences(commit.references, options.github, 'issues')
-  const hashRefs = formatReferences(commit.references, options.github, 'hash')
+  const prRefs = formatReferences(commit.references, options.repo as string, 'issues')
+  const hashRefs = formatReferences(commit.references, options.repo as string, 'hash')
 
   let authors = join([...new Set(commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : `**${i.name}**`))])?.trim()
   if (authors)
@@ -111,7 +111,7 @@ export function generateMarkdown(commits: Commit[], options: ResolvedChangelogOp
   if (!lines.length)
     lines.push('*No significant changes*')
 
-  const url = `https://github.com/${options.github}/compare/${options.from}...${options.to}`
+  const url = `https://github.com/${options.repo}/compare/${options.from}...${options.to}`
 
   lines.push('', `##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](${url})`)
 

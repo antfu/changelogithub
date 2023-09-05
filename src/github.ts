@@ -9,11 +9,11 @@ export async function sendRelease(
   content: string,
 ) {
   const headers = getHeaders(options)
-  let url = `https://api.github.com/repos/${options.github}/releases`
+  let url = `https://api.github.com/repos/${options.repo}/releases`
   let method = 'POST'
 
   try {
-    const exists = await $fetch(`https://api.github.com/repos/${options.github}/releases/tags/${options.to}`, {
+    const exists = await $fetch(`https://api.github.com/repos/${options.repo}/releases/tags/${options.to}`, {
       headers,
     })
     if (exists.url) {
@@ -31,7 +31,10 @@ export async function sendRelease(
     prerelease: options.prerelease,
     tag_name: options.to,
   }
-  console.log(cyan(method === 'POST' ? 'Creating release notes...' : 'Updating release notes...'))
+  console.log(cyan(method === 'POST'
+    ? 'Creating release notes...'
+    : 'Updating release notes...'),
+  )
   const res = await $fetch(url, {
     method,
     body: JSON.stringify(body),
@@ -68,7 +71,7 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
 
   if (info.commits.length) {
     try {
-      const data = await $fetch(`https://api.github.com/repos/${options.github}/commits/${info.commits[0]}`, {
+      const data = await $fetch(`https://api.github.com/repos/${options.repo}/commits/${info.commits[0]}`, {
         headers: getHeaders(options),
       })
       info.login = data.author.login
@@ -125,7 +128,7 @@ export async function resolveAuthors(commits: Commit[], options: ChangelogOption
 
 export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   try {
-    await $fetch(`https://api.github.com/repos/${options.github}/git/ref/tags/${tag}`, {
+    await $fetch(`https://api.github.com/repos/${options.repo}/git/ref/tags/${tag}`, {
       headers: getHeaders(options),
     })
     return true
