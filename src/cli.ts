@@ -59,16 +59,16 @@ cli
         return
       }
 
+      if (typeof config.output === 'string') {
+        await fs.writeFile(config.output, md, 'utf-8')
+        console.log(yellow(`Saved to ${config.output}`))
+        return
+      }
+
       if (!config.token) {
         console.error(red('No GitHub token found, specify it via GITHUB_TOKEN env. Release skipped.'))
         process.exitCode = 1
         printWebUrl()
-        return
-      }
-
-      if (typeof config.output === 'string') {
-        await fs.writeFile(config.output, md, 'utf-8')
-        console.log(yellow(`Saved to ${config.output}`))
         return
       }
 
