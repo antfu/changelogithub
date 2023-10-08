@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'

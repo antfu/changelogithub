@@ -2,7 +2,7 @@
   "name": "changelogithub",
   "type": "module",
   "version": "0.13.0",
-  "packageManager": "pnpm@8.7.1",
+  "packageManager": "pnpm@8.8.0",
   "description": "Generate changelog for GitHub.",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
@@ -34,8 +34,8 @@
   "types": "./dist/index.d.ts",
   "bin": "./cli.mjs",
   "files": [
-    "dist",
-    "*.mjs"
+    "*.mjs",
+    "dist"
   ],
   "engines": {
     "node": ">=12.0.0"
@@ -61,18 +61,18 @@
     "ohmyfetch": "^0.4.21"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.41.0",
+    "@antfu/eslint-config": "^1.0.0-beta.21",
     "@types/conventional-changelog": "^3.1.3",
-    "@types/debug": "^4.1.8",
-    "@types/fs-extra": "^11.0.1",
-    "@types/minimist": "^1.2.2",
-    "@types/semver": "^7.5.1",
+    "@types/debug": "^4.1.9",
+    "@types/fs-extra": "^11.0.2",
+    "@types/minimist": "^1.2.3",
+    "@types/semver": "^7.5.3",
     "bumpp": "^9.2.0",
-    "eslint": "^8.48.0",
+    "eslint": "^8.51.0",
     "esno": "^0.17.0",
     "fs-extra": "^11.1.1",
     "typescript": "^5.2.2",
     "unbuild": "^2.0.0",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   }
 }
