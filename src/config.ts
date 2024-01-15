@@ -26,7 +26,7 @@ export async function resolveConfig(options: ChangelogOptions) {
     name: 'changelogithub',
     defaults: defaultConfig,
     overrides: options,
-    packageJson: true,
+    packageJson: 'changelogithub',
   }).then(r => r.config || defaultConfig)
 
   config.to = config.to || await getCurrentGitBranch()
