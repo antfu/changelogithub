@@ -1,10 +1,11 @@
 import { expect, it } from 'vitest'
 import { generate } from '../src'
 
-it('parse', async () => {
-  const COMMIT_FROM = '19cf4f84f16f1a8e1e7032bbef550c382938649d'
-  const COMMIT_TO = '49b0222e8d60b7f299941def7511cee0460a8149'
+const COMMIT_FROM = '19cf4f84f16f1a8e1e7032bbef550c382938649d'
+const COMMIT_TO = '49b0222e8d60b7f299941def7511cee0460a8149'
+const regexToFindAllUrls = /https:\/\/[^\s]*/g
 
+it('parse', async () => {
   const { config, md } = await generate({
     from: COMMIT_FROM,
     to: COMMIT_TO,
@@ -12,6 +13,8 @@ it('parse', async () => {
 
   expect(config).toMatchInlineSnapshot(`
     {
+      "baseUrl": "github.com",
+      "baseUrlApi": "api.github.com",
       "capitalize": true,
       "contributors": true,
       "from": "19cf4f84f16f1a8e1e7032bbef550c382938649d",
@@ -64,4 +67,30 @@ it('parse', async () => {
 
     ##### [View changes on GitHub](https://github.com/antfu/changelogithub/compare/19cf4f84f16f1a8e1e7032bbef550c382938649d...49b0222e8d60b7f299941def7511cee0460a8149)"
   `)
+})
+
+it.each([
+  { baseUrl: undefined, baseUrlApi: undefined },
+  { baseUrl: 'test.github.com', baseUrlApi: 'api.test.github.com' },
+])('should generate config while baseUrl is set to $baseUrl', async ({ baseUrl, baseUrlApi }) => {
+  const newProposedConfig = { baseUrl, baseUrlApi }
+
+  const { config, md } = await generate({
+    ...newProposedConfig,
+    from: COMMIT_FROM,
+    to: COMMIT_TO,
+  })
+
+  if (newProposedConfig.baseUrl) {
+    expect(config).toEqual(expect.objectContaining(newProposedConfig))
+  }
+  else {
+    expect(config).toEqual(expect.objectContaining({
+      baseUrl: 'github.com',
+      baseUrlApi: 'api.github.com',
+    }))
+  }
+
+  const urlsToGithub = md.match(regexToFindAllUrls)
+  expect(urlsToGithub?.every(url => url.startsWith(`https://${config.baseUrl}`))).toBe(true)
 })
