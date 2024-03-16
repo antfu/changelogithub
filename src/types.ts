@@ -64,6 +64,16 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * @default true
    */
   emoji?: boolean
+  /**
+   * Github base url
+   * @default github.com
+   */
+  baseUrl?: string
+  /**
+   * Github base API url
+   * @default api.github.com
+   */
+  baseUrlApi?: string
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>

@@ -9,11 +9,11 @@ export async function sendRelease(
   content: string,
 ) {
   const headers = getHeaders(options)
-  let url = `https://api.github.com/repos/${options.repo}/releases`
+  let url = `https://${options.baseUrlApi}/repos/${options.repo}/releases`
   let method = 'POST'
 
   try {
-    const exists = await $fetch(`https://api.github.com/repos/${options.repo}/releases/tags/${options.to}`, {
+    const exists = await $fetch(`https://${options.baseUrlApi}/repos/${options.repo}/releases/tags/${options.to}`, {
       headers,
     })
     if (exists.url) {
@@ -59,7 +59,7 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
     return info
 
   try {
-    const data = await $fetch(`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, {
+    const data = await $fetch(`https://${options.baseUrlApi}/search/users?q=${encodeURIComponent(info.email)}`, {
       headers: getHeaders(options),
     })
     info.login = data.items[0].login
@@ -71,7 +71,7 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
 
   if (info.commits.length) {
     try {
-      const data = await $fetch(`https://api.github.com/repos/${options.repo}/commits/${info.commits[0]}`, {
+      const data = await $fetch(`https://${options.baseUrlApi}/repos/${options.repo}/commits/${info.commits[0]}`, {
         headers: getHeaders(options),
       })
       info.login = data.author.login
@@ -128,7 +128,7 @@ export async function resolveAuthors(commits: Commit[], options: ChangelogOption
 
 export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   try {
-    await $fetch(`https://api.github.com/repos/${options.repo}/git/ref/tags/${tag}`, {
+    await $fetch(`https://${options.baseUrlApi}/repos/${options.repo}/git/ref/tags/${tag}`, {
       headers: getHeaders(options),
     })
     return true

@@ -29,6 +29,8 @@ export async function resolveConfig(options: ChangelogOptions) {
     packageJson: 'changelogithub',
   }).then(r => r.config || defaultConfig)
 
+  config.baseUrl = config.baseUrl ?? 'github.com'
+  config.baseUrlApi = config.baseUrlApi ?? 'api.github.com'
   config.to = config.to || await getCurrentGitBranch()
   config.from = config.from || await getLastMatchingTag(config.to) || await getFirstGitCommit()
   // @ts-expect-error backward compatibility
