@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { generate } from '../src'
+import { generate, getGitHubRepo } from '../src'
 
 const COMMIT_FROM = '19cf4f84f16f1a8e1e7032bbef550c382938649d'
 const COMMIT_TO = '49b0222e8d60b7f299941def7511cee0460a8149'
@@ -70,19 +70,17 @@ it('parse', async () => {
 })
 
 it.each([
-  { baseUrl: undefined, baseUrlApi: undefined },
-  { baseUrl: 'test.github.com', baseUrlApi: 'api.test.github.com' },
-])('should generate config while baseUrl is set to $baseUrl', async ({ baseUrl, baseUrlApi }) => {
-  const newProposedConfig = { baseUrl, baseUrlApi }
-
+  { baseUrl: undefined, baseUrlApi: undefined, repo: undefined },
+  { baseUrl: 'test.github.com', baseUrlApi: 'api.test.github.com', repo: 'user/changelogithub' },
+])('should generate config while baseUrl is set to $baseUrl', async (proposedConfig) => {
   const { config, md } = await generate({
-    ...newProposedConfig,
+    ...proposedConfig,
     from: COMMIT_FROM,
     to: COMMIT_TO,
   })
 
-  if (newProposedConfig.baseUrl) {
-    expect(config).toEqual(expect.objectContaining(newProposedConfig))
+  if (proposedConfig.baseUrl) {
+    expect(config).toEqual(expect.objectContaining(proposedConfig))
   }
   else {
     expect(config).toEqual(expect.objectContaining({
@@ -93,4 +91,15 @@ it.each([
 
   const urlsToGithub = md.match(regexToFindAllUrls)
   expect(urlsToGithub?.every(url => url.startsWith(`https://${config.baseUrl}`))).toBe(true)
+})
+
+it('should match with current github repo', async () => {
+  const repo = await getGitHubRepo('github.com')
+  expect(repo).toContain('/changelogithub')
+})
+
+it('should throw error when baseUrl is different from git repository', () => {
+  expect(async () => {
+    await getGitHubRepo('custom.git.com')
+  }).rejects.toThrow('Can not parse GitHub repo from url')
 })

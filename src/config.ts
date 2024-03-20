@@ -34,7 +34,7 @@ export async function resolveConfig(options: ChangelogOptions) {
   config.to = config.to || await getCurrentGitBranch()
   config.from = config.from || await getLastMatchingTag(config.to) || await getFirstGitCommit()
   // @ts-expect-error backward compatibility
-  config.repo = config.repo || config.github || await getGitHubRepo()
+  config.repo = config.repo || config.github || await getGitHubRepo(config.baseUrl)
   config.prerelease = config.prerelease ?? isPrerelease(config.to)
 
   if (typeof config.repo !== 'string')
