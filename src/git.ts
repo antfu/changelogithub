@@ -1,6 +1,8 @@
-export async function getGitHubRepo() {
+export async function getGitHubRepo(baseUrl: string) {
   const url = await execCommand('git', ['config', '--get', 'remote.origin.url'])
-  const match = url.match(/github\.com[\/:]([\w\d._-]+?)\/([\w\d._-]+?)(\.git)?$/i)
+  const escapedBaseUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`${escapedBaseUrl}[\/:]([\\w\\d._-]+?)\\/([\\w\\d._-]+?)(\\.git)?$`, 'i')
+  const match = regex.exec(url)
   if (!match)
     throw new Error(`Can not parse GitHub repo from url ${url}`)
   return `${match[1]}/${match[2]}`

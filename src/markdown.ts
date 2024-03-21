@@ -5,7 +5,7 @@ import type { Commit, ResolvedChangelogOptions } from './types'
 
 const emojisRE = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g
 
-function formatReferences(references: Reference[], github: string, type: 'issues' | 'hash'): string {
+function formatReferences(references: Reference[], baseUrl: string, github: string, type: 'issues' | 'hash'): string {
   const refs = references
     .filter((i) => {
       if (type === 'issues')
@@ -16,8 +16,8 @@ function formatReferences(references: Reference[], github: string, type: 'issues
       if (!github)
         return ref.value
       if (ref.type === 'pull-request' || ref.type === 'issue')
-        return `https://github.com/${github}/issues/${ref.value.slice(1)}`
-      return `[<samp>(${ref.value.slice(0, 5)})</samp>](https://github.com/${github}/commit/${ref.value})`
+        return `https://${baseUrl}/${github}/issues/${ref.value.slice(1)}`
+      return `[<samp>(${ref.value.slice(0, 5)})</samp>](https://${baseUrl}/${github}/commit/${ref.value})`
     })
 
   const referencesString = join(refs).trim()
@@ -28,8 +28,8 @@ function formatReferences(references: Reference[], github: string, type: 'issues
 }
 
 function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
-  const prRefs = formatReferences(commit.references, options.repo as string, 'issues')
-  const hashRefs = formatReferences(commit.references, options.repo as string, 'hash')
+  const prRefs = formatReferences(commit.references, options.baseUrl, options.repo as string, 'issues')
+  const hashRefs = formatReferences(commit.references, options.baseUrl, options.repo as string, 'hash')
 
   let authors = join([...new Set(commit.resolvedAuthors?.map(i => i.login ? `@${i.login}` : `**${i.name}**`))])?.trim()
   if (authors)
@@ -111,7 +111,7 @@ export function generateMarkdown(commits: Commit[], options: ResolvedChangelogOp
   if (!lines.length)
     lines.push('*No significant changes*')
 
-  const url = `https://github.com/${options.repo}/compare/${options.from}...${options.to}`
+  const url = `https://${options.baseUrl}/${options.repo}/compare/${options.from}...${options.to}`
 
   lines.push('', `##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](${url})`)
 
