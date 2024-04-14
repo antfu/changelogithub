@@ -1,3 +1,5 @@
+import semver from 'semver'
+
 export async function getGitHubRepo(baseUrl: string) {
   const url = await execCommand('git', ['config', '--get', 'remote.origin.url'])
   const escapedBaseUrl = baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -22,8 +24,8 @@ export async function getGitTags() {
 }
 
 export async function getLastMatchingTag(inputTag: string) {
-  const isVersion = inputTag[0] === 'v'
-  const isPrerelease = inputTag[0] === 'v' && inputTag.includes('-')
+  const isVersion = semver.valid(semver.coerce(inputTag))
+  const isPrerelease = semver.prerelease(inputTag) !== null
   const tags = await getGitTags()
 
   let tag: string | undefined
