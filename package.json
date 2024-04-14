@@ -2,7 +2,7 @@
   "name": "changelogithub",
   "type": "module",
   "version": "0.13.5",
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@8.15.7",
   "description": "Generate changelog for GitHub.",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
@@ -62,17 +62,17 @@
     "semver": "^7.6.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.9.0",
+    "@antfu/eslint-config": "^2.13.3",
     "@types/debug": "^4.1.12",
     "@types/fs-extra": "^11.0.4",
     "@types/minimist": "^1.2.5",
     "@types/semver": "^7.5.8",
     "bumpp": "^9.4.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "esno": "^4.7.0",
     "fs-extra": "^11.2.0",
-    "typescript": "^5.4.3",
+    "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
-    "vitest": "^1.4.0"
+    "vitest": "^1.5.0"
   }
 }
