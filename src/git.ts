@@ -34,7 +34,7 @@ export async function getLastMatchingTag(inputTag: string) {
     tag = tags.find(tag => tag !== inputTag && semver.valid(semver.coerce(tag)) && semver.prerelease(tag) === null)
 
   // Fallback to the last tag, that are not the input tag
-  tag ||= tags.find(tag => tag !== inputTag)
+  tag ||= tags.find(tag => tag !== inputTag && semver.valid(semver.coerce(tag)))
 
   return tag
 }
