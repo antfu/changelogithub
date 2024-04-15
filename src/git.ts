@@ -31,7 +31,7 @@ export async function getLastMatchingTag(inputTag: string) {
   let tag: string | undefined
   // Doing a stable release, find the last stable release to compare with
   if (!isPrerelease && isVersion)
-    tag = tags.find(tag => tag !== inputTag && tag[0] === 'v' && !tag.includes('-'))
+    tag = tags.find(tag => tag !== inputTag && semver.valid(semver.coerce(tag)) && semver.prerelease(tag) === null)
 
   // Fallback to the last tag, that are not the input tag
   tag ||= tags.find(tag => tag !== inputTag)
