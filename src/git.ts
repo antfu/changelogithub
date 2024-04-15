@@ -28,17 +28,17 @@ function getTagWithoutPrefix(tag: string) {
 }
 
 export async function getLastMatchingTag(inputTag: string) {
-  const isVersion = semver.valid(getTagWithoutPrefix(inputTag))
+  const isVersion = semver.valid(getTagWithoutPrefix(inputTag)) !== null
   const isPrerelease = semver.prerelease(inputTag) !== null
   const tags = await getGitTags()
 
   let tag: string | undefined
   // Doing a stable release, find the last stable release to compare with
   if (!isPrerelease && isVersion)
-    tag = tags.find(tag => tag !== inputTag && semver.valid(getTagWithoutPrefix(tag)) && semver.prerelease(getTagWithoutPrefix(tag)) === null)
+    tag = tags.find(tag => tag !== inputTag && semver.valid(getTagWithoutPrefix(tag)) !== null && semver.prerelease(getTagWithoutPrefix(tag)) === null)
 
   // Fallback to the last tag, that are not the input tag
-  tag ||= tags.find(tag => tag !== inputTag && semver.valid(getTagWithoutPrefix(tag)))
+  tag ||= tags.find(tag => tag !== inputTag && semver.valid(getTagWithoutPrefix(tag)) !== null)
 
   return tag
 }
