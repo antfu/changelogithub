@@ -3,7 +3,7 @@ import { generate, getGitHubRepo } from '../src'
 
 const COMMIT_FROM = '19cf4f84f16f1a8e1e7032bbef550c382938649d'
 const COMMIT_TO = '49b0222e8d60b7f299941def7511cee0460a8149'
-const regexToFindAllUrls = /https:\/\/[^\s]*/g
+const regexToFindAllUrls = /https:\/\/\S*/g
 
 it('parse', async () => {
   const { config, md } = await generate({
@@ -39,7 +39,7 @@ it('parse', async () => {
       },
     }
   `)
-  expect(md.replace(/&nbsp;/g, ' ').replace(/[ ]+/g, ' ')).toMatchInlineSnapshot(`
+  expect(md.replace(/&nbsp;/g, ' ').replace(/ +/g, ' ')).toMatchInlineSnapshot(`
     "### Breaking Changes
 
     - **cli**: Rename \`groupByScope\` to \`group\` - by **Enzo Innocenzi** in https://github.com/antfu/changelogithub/issues/22 [<samp>(89282)</samp>](https://github.com/antfu/changelogithub/commit/8928229)

@@ -21,7 +21,7 @@ export async function sendRelease(
       method = 'PATCH'
     }
   }
-  catch (e) {
+  catch {
   }
 
   const body = {
@@ -76,7 +76,7 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
       })
       info.login = data.author.login
     }
-    catch (e) {}
+    catch {}
   }
 
   return info
@@ -133,7 +133,7 @@ export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
     })
     return true
   }
-  catch (e) {
+  catch {
     return false
   }
 }
