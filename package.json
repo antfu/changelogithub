@@ -62,7 +62,7 @@
     "semver": "^7.6.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.22.0",
+    "@antfu/eslint-config": "^2.22.3",
     "@types/debug": "^4.1.12",
     "@types/fs-extra": "^11.0.4",
     "@types/minimist": "^1.2.5",
@@ -73,6 +73,6 @@
     "fs-extra": "^11.2.0",
     "typescript": "^5.5.3",
     "unbuild": "^2.0.0",
-    "vitest": "^2.0.2"
+    "vitest": "^2.0.3"
   }
 }
