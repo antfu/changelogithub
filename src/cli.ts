@@ -4,6 +4,7 @@ import fs from 'node:fs/promises'
 import process from 'node:process'
 import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
+import { execa } from 'execa'
 import { version } from '../package.json'
 import { generate, hasTagOnGitHub, isRepoShallow, sendRelease } from './index'
 
@@ -26,10 +27,19 @@ cli
   .option('--dry', 'Dry run')
   .help()
 
+async function readTokenFromGitHubCli() {
+  try {
+    return (await execa('gh', ['auth', 'token'])).stdout.trim()
+  }
+  catch {
+    return ''
+  }
+}
+
 cli
   .command('')
   .action(async (args) => {
-    args.token = args.token || process.env.GITHUB_TOKEN
+    args.token = args.token || process.env.GITHUB_TOKEN || await readTokenFromGitHubCli()
 
     let webUrl = ''
 
