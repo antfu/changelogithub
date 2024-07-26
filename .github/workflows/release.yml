@@ -29,7 +29,7 @@ jobs:
 
       - run: npm start
         env:
-          GITHUB_TOKEN: ${{secrets.WORKFLOW_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.ACCESS_TOKEN}}
 
       - run: npm publish
         env:

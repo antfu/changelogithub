@@ -44,7 +44,7 @@ jobs:
 
       - run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
         env:
-          GITHUB_TOKEN: ${{secrets.WORKFLOW_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.ACCESS_TOKEN}}
 ```
 
 It will be trigged whenever you push a tag to GitHub that starts with `v`.
