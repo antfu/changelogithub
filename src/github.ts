@@ -50,6 +50,12 @@ function getHeaders(options: ChangelogOptions) {
   }
 }
 
+const excludeAuthors = [
+  /\[bot\]/i,
+  /dependabot/i,
+  /\(bot\)/i,
+]
+
 export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorInfo) {
   if (info.login)
     return info
@@ -87,6 +93,8 @@ export async function resolveAuthors(commits: Commit[], options: ChangelogOption
   commits.forEach((commit) => {
     commit.resolvedAuthors = commit.authors.map((a, idx) => {
       if (!a.email || !a.name)
+        return null
+      if (excludeAuthors.some(re => re.test(a.name)))
         return null
       if (!map.has(a.email)) {
         map.set(a.email, {
