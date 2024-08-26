@@ -34,13 +34,15 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - name: Set node
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          registry-url: https://registry.npmjs.org/
+          node-version: lts/*
 
       - run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
         env:
