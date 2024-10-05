@@ -32,7 +32,8 @@ export async function resolveConfig(options: ChangelogOptions) {
   config.baseUrl = config.baseUrl ?? 'github.com'
   config.baseUrlApi = config.baseUrlApi ?? 'api.github.com'
   config.to = config.to || await getCurrentGitBranch()
-  config.from = config.from || await getLastMatchingTag(config.to) || await getFirstGitCommit()
+  config.tagFilter = config.tagFilter ?? (() => true)
+  config.from = config.from || await getLastMatchingTag(config.to, config.tagFilter) || await getFirstGitCommit()
   // @ts-expect-error backward compatibility
   config.repo = config.repo || config.github || await getGitHubRepo(config.baseUrl)
   config.prerelease = config.prerelease ?? isPrerelease(config.to)

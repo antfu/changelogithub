@@ -74,6 +74,11 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * @default api.github.com
    */
   baseUrlApi?: string
+
+  /**
+   * Filter tags
+   */
+  tagFilter?: (tag: string) => boolean
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>
