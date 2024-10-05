@@ -1,8 +1,8 @@
+import type { AuthorInfo, ChangelogOptions, Commit } from './types'
+import { notNullish } from '@antfu/utils'
+import { cyan, green } from 'kolorist'
 /* eslint-disable no-console */
 import { $fetch } from 'ofetch'
-import { cyan, green } from 'kolorist'
-import { notNullish } from '@antfu/utils'
-import type { AuthorInfo, ChangelogOptions, Commit } from './types'
 
 export async function sendRelease(
   options: ChangelogOptions,

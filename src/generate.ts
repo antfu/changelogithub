@@ -1,8 +1,8 @@
-import { getGitDiff } from 'changelogen'
 import type { ChangelogOptions } from './types'
-import { generateMarkdown } from './markdown'
-import { resolveAuthors } from './github'
+import { getGitDiff } from 'changelogen'
 import { resolveConfig } from './config'
+import { resolveAuthors } from './github'
+import { generateMarkdown } from './markdown'
 import { parseCommits } from './parse'
 
 export async function generate(options: ChangelogOptions) {

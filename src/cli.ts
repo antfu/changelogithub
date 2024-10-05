@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
+
 import fs from 'node:fs/promises'
 import process from 'node:process'
-import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import cac from 'cac'
 import { execa } from 'execa'
+import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import { version } from '../package.json'
 import { generate, hasTagOnGitHub, isRepoShallow, sendRelease } from './index'
 

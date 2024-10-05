@@ -1,7 +1,7 @@
-import { partition } from '@antfu/utils'
 import type { Reference } from 'changelogen'
-import { convert } from 'convert-gitmoji'
 import type { Commit, ResolvedChangelogOptions } from './types'
+import { partition } from '@antfu/utils'
+import { convert } from 'convert-gitmoji'
 
 const emojisRE = /([\u2700-\u27BF\uE000-\uF8FF\u2011-\u26FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD10-\uDDFF])/g
 

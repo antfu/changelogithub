@@ -1,5 +1,5 @@
-import { getCurrentGitBranch, getFirstGitCommit, getGitHubRepo, getLastMatchingTag, isPrerelease } from './git'
 import type { ChangelogOptions, ResolvedChangelogOptions } from './types'
+import { getCurrentGitBranch, getFirstGitCommit, getGitHubRepo, getLastMatchingTag, isPrerelease } from './git'
 
 export function defineConfig(config: ChangelogOptions) {
   return config
