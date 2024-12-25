@@ -1,4 +1,4 @@
-import type { ChangelogConfig, GitCommit } from 'changelogen'
+import type { ChangelogConfig, GitCommit, RepoConfig } from 'changelogen'
 
 export type ChangelogenOptions = ChangelogConfig
 
@@ -79,6 +79,11 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * Filter tags
    */
   tagFilter?: (tag: string) => boolean
+
+  /**
+   * Release repository, defaults to `repo`
+   */
+  releaseRepo?: RepoConfig | string
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>

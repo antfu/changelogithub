@@ -9,11 +9,11 @@ export async function sendRelease(
   content: string,
 ) {
   const headers = getHeaders(options)
-  let url = `https://${options.baseUrlApi}/repos/${options.repo}/releases`
+  let url = `https://${options.baseUrlApi}/repos/${options.releaseRepo}/releases`
   let method = 'POST'
 
   try {
-    const exists = await $fetch(`https://${options.baseUrlApi}/repos/${options.repo}/releases/tags/${options.to}`, {
+    const exists = await $fetch(`https://${options.baseUrlApi}/repos/${options.releaseRepo}/releases/tags/${options.to}`, {
       headers,
     })
     if (exists.url) {
