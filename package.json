@@ -1,7 +1,7 @@
 {
   "name": "changelogithub",
   "type": "module",
-  "version": "0.13.11",
+  "version": "0.13.12",
   "packageManager": "pnpm@9.15.4",
   "description": "Generate changelog for GitHub.",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
