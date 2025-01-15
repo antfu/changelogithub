@@ -20,8 +20,10 @@ it('parse', async () => {
       "from": "19cf4f84f16f1a8e1e7032bbef550c382938649d",
       "group": true,
       "prerelease": false,
+      "releaseRepo": "antfu/changelogithub",
       "repo": "antfu/changelogithub",
       "scopeMap": {},
+      "tagFilter": [Function],
       "titles": {
         "breakingChanges": "🚨 Breaking Changes",
       },
