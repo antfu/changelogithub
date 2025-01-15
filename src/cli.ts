@@ -16,6 +16,7 @@ cli
   .option('--from <ref>', 'From tag')
   .option('--to <ref>', 'To tag')
   .option('--github <path>', 'GitHub Repository, e.g. antfu/changelogithub')
+  .option('--release-github <path>', 'Release GitHub Repository, defaults to `github`')
   .option('--name <name>', 'Name of the release')
   .option('--contributors', 'Show contributors section')
   .option('--prerelease', 'Mark release as prerelease')
@@ -48,7 +49,7 @@ cli
       console.log(dim(`changelo${bold('github')} `) + dim(`v${version}`))
 
       const { config, md, commits } = await generate(args as any)
-      webUrl = `https://${config.baseUrl}/${config.repo}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(md))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
+      webUrl = `https://${config.baseUrl}/${config.releaseRepo}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(md))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
 
       console.log(cyan(config.from) + dim(' -> ') + blue(config.to) + dim(` (${commits.length} commits)`))
       console.log(dim('--------------'))
