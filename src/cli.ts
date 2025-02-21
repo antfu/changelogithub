@@ -49,12 +49,13 @@ cli
       console.log(dim(`changelo${bold('github')} `) + dim(`v${version}`))
 
       const { config, md, commits } = await generate(args as any)
-      webUrl = `https://${config.baseUrl}/${config.releaseRepo}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(md))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
+      const printMd = md.replace(/&nbsp;/g, '')
+      webUrl = `https://${config.baseUrl}/${config.releaseRepo}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(printMd)}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
 
       console.log(cyan(config.from) + dim(' -> ') + blue(config.to) + dim(` (${commits.length} commits)`))
       console.log(dim('--------------'))
       console.log()
-      console.log(md.replace(/&nbsp;/g, ''))
+      console.log(printMd)
       console.log()
       console.log(dim('--------------'))
 
