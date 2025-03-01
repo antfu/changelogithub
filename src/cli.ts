@@ -40,8 +40,12 @@ async function readTokenFromGitHubCli() {
 cli
   .command('')
   .action(async (args) => {
-    args.token = args.token || process.env.GITHUB_TOKEN || await readTokenFromGitHubCli()
+    const token = args.token || process.env.GITHUB_TOKEN || await readTokenFromGitHubCli()
 
+    if (token) {
+      args.token = token
+    }
+    
     let webUrl = ''
 
     try {
