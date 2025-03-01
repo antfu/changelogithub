@@ -1,6 +1,6 @@
 import type { AuthorInfo, ChangelogOptions, Commit } from './types'
 import { notNullish } from '@antfu/utils'
-import { cyan, green } from 'kolorist'
+import { cyan, green } from 'ansis'
 /* eslint-disable no-console */
 import { $fetch } from 'ofetch'
 

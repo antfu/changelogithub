@@ -2,9 +2,9 @@
 
 import fs from 'node:fs/promises'
 import process from 'node:process'
+import { blue, bold, cyan, dim, red, yellow } from 'ansis'
 import cac from 'cac'
 import { execa } from 'execa'
-import { blue, bold, cyan, dim, red, yellow } from 'kolorist'
 import { version } from '../package.json'
 import { generate, hasTagOnGitHub, isRepoShallow, sendRelease } from './index'
 
@@ -45,7 +45,7 @@ cli
     if (token) {
       args.token = token
     }
-    
+
     let webUrl = ''
 
     try {
