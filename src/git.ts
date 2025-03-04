@@ -25,7 +25,7 @@ function getVersionString(template: string, tag: string) {
   return match ? match[1] : tag
 }
 
-export async function getGitTags(tagTemplate: string) {
+export async function getGitTags() {
   const output = await execCommand('git', [
     'log',
     '--simplify-by-decoration',
@@ -39,17 +39,12 @@ export async function getGitTags(tagTemplate: string) {
   while (match !== null) {
     const tag = match?.[1].trim()
     if (tag) {
-      const version = getVersionString(tagTemplate, tag)
-      semver.valid(version) && tagList.push(tag)
+      tagList.push(tag)
     }
     match = tagRegex.exec(output)
   }
 
-  return tagList.sort((a, b) => semver.rcompare(a, b))
-}
-
-function getTagWithoutPrefix(tag: string) {
-  return tag.replace(/^v/, '')
+  return tagList
 }
 
 export async function getLastMatchingTag(
@@ -57,27 +52,26 @@ export async function getLastMatchingTag(
   tagFilter: (tag: string) => boolean,
   tagTemplate: string,
 ) {
-  const inputTagWithoutPrefix = getTagWithoutPrefix(inputTag)
-  const isVersion = semver.valid(inputTagWithoutPrefix) !== null
-  const isPrerelease = semver.prerelease(inputTag) !== null
-  const tags = await getGitTags(tagTemplate)
+  const inputVersionString = getVersionString(tagTemplate, inputTag)
+  const isVersion = semver.valid(inputVersionString) !== null
+  const isPrerelease = semver.prerelease(inputVersionString) !== null
+  const tags = await getGitTags()
   const filteredTags = tags.filter(tagFilter)
 
   let tag: string | undefined
   // Doing a stable release, find the last stable release to compare with
   if (!isPrerelease && isVersion) {
     tag = filteredTags.find((tag) => {
-      const tagWithoutPrefix = getTagWithoutPrefix(tag)
+      const versionString = getVersionString(tagTemplate, tag)
 
-      return tagWithoutPrefix !== inputTagWithoutPrefix
-        && semver.valid(tagWithoutPrefix) !== null
-        && semver.prerelease(tagWithoutPrefix) === null
+      return versionString !== inputVersionString
+        && semver.valid(versionString) !== null
+        && semver.prerelease(versionString) === null
     })
   }
 
   // Fallback to the last tag, that are not the input tag
   tag ||= filteredTags.find(tag => tag !== inputTag)
-
   return tag
 }
 
