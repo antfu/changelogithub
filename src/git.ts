@@ -18,20 +18,49 @@ export async function isRepoShallow() {
   return (await execCommand('git', ['rev-parse', '--is-shallow-repository'])).trim() === 'true'
 }
 
-export async function getGitTags() {
-  return (await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=creatordate']).then(r => r.split('\n')))
-    .reverse()
+function getVersionString(template: string, tag: string) {
+  const pattern = template.replace(/%s/g, '(.+)')
+  const regex = new RegExp(`^${pattern}$`)
+  const match = regex.exec(tag)
+  return match ? match[1] : tag
+}
+
+export async function getGitTags(tagTemplate: string) {
+  const output = await execCommand('git', [
+    'log',
+    '--simplify-by-decoration',
+    '--pretty=format:"%d"',
+  ])
+
+  const tagRegex = /tag: ([^,)]+)/g
+  const tagList: string[] = []
+  let match
+
+  while (match !== null) {
+    const tag = match?.[1].trim()
+    if (tag) {
+      const version = getVersionString(tagTemplate, tag)
+      semver.valid(version) && tagList.push(tag)
+    }
+    match = tagRegex.exec(output)
+  }
+
+  return tagList.sort((a, b) => semver.rcompare(a, b))
 }
 
 function getTagWithoutPrefix(tag: string) {
   return tag.replace(/^v/, '')
 }
 
-export async function getLastMatchingTag(inputTag: string, tagFilter: (tag: string) => boolean) {
+export async function getLastMatchingTag(
+  inputTag: string,
+  tagFilter: (tag: string) => boolean,
+  tagTemplate: string,
+) {
   const inputTagWithoutPrefix = getTagWithoutPrefix(inputTag)
   const isVersion = semver.valid(inputTagWithoutPrefix) !== null
   const isPrerelease = semver.prerelease(inputTag) !== null
-  const tags = await getGitTags()
+  const tags = await getGitTags(tagTemplate)
   const filteredTags = tags.filter(tagFilter)
 
   let tag: string | undefined

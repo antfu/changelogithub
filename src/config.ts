@@ -18,6 +18,7 @@ const defaultConfig: ChangelogOptions = {
   contributors: true,
   capitalize: true,
   group: true,
+  tag: 'v%s',
 }
 
 export async function resolveConfig(options: ChangelogOptions) {
@@ -33,7 +34,12 @@ export async function resolveConfig(options: ChangelogOptions) {
   config.baseUrlApi = config.baseUrlApi ?? 'api.github.com'
   config.to = config.to || await getCurrentGitBranch()
   config.tagFilter = config.tagFilter ?? (() => true)
-  config.from = config.from || await getLastMatchingTag(config.to, config.tagFilter) || await getFirstGitCommit()
+  config.tag = config.tag ?? 'v%s'
+  config.from = config.from || await getLastMatchingTag(
+    config.to,
+    config.tagFilter,
+    config.tag,
+  ) || await getFirstGitCommit()
   // @ts-expect-error backward compatibility
   config.repo = config.repo || config.github || await getGitHubRepo(config.baseUrl)
   // @ts-expect-error backward compatibility

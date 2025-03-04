@@ -84,6 +84,8 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * Release repository, defaults to `repo`
    */
   releaseRepo?: RepoConfig | string
+
+  tag?: string
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>
