@@ -18,6 +18,10 @@ export async function isRepoShallow() {
   return (await execCommand('git', ['rev-parse', '--is-shallow-repository'])).trim() === 'true'
 }
 
+export function getSafeTagTemplate(template: string) {
+  return template.includes('%s') ? template : `${template}%s`
+}
+
 function getVersionString(template: string, tag: string) {
   const pattern = template.replace(/%s/g, '(.+)')
   const regex = new RegExp(`^${pattern}$`)

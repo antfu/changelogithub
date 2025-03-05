@@ -85,6 +85,14 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    */
   releaseRepo?: RepoConfig | string
 
+  /**
+   * Can be set to a custom tag string
+   * Any `%s` placeholders in the tag string will be replaced
+   * If the tag string does _not_ contain any `%s` placeholders,
+   * then the version number will be appended to the tag.
+   *
+   * @default `v%s`.
+   */
   tag?: string
 }
 
