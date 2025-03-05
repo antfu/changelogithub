@@ -18,19 +18,47 @@ export async function isRepoShallow() {
   return (await execCommand('git', ['rev-parse', '--is-shallow-repository'])).trim() === 'true'
 }
 
+export function getSafeTagTemplate(template: string) {
+  return template.includes('%s') ? template : `${template}%s`
+}
+
+function getVersionString(template: string, tag: string) {
+  const pattern = template.replace(/%s/g, '(.+)')
+  const regex = new RegExp(`^${pattern}$`)
+  const match = regex.exec(tag)
+  return match ? match[1] : tag
+}
+
 export async function getGitTags() {
-  return (await execCommand('git', ['--no-pager', 'tag', '-l', '--sort=creatordate']).then(r => r.split('\n')))
-    .reverse()
+  const output = await execCommand('git', [
+    'log',
+    '--simplify-by-decoration',
+    '--pretty=format:"%d"',
+  ])
+
+  const tagRegex = /tag: ([^,)]+)/g
+  const tagList: string[] = []
+  let match
+
+  while (match !== null) {
+    const tag = match?.[1].trim()
+    if (tag) {
+      tagList.push(tag)
+    }
+    match = tagRegex.exec(output)
+  }
+
+  return tagList
 }
 
-function getTagWithoutPrefix(tag: string) {
-  return tag.replace(/^v/, '')
-}
-
-export async function getLastMatchingTag(inputTag: string, tagFilter: (tag: string) => boolean) {
-  const inputTagWithoutPrefix = getTagWithoutPrefix(inputTag)
-  const isVersion = semver.valid(inputTagWithoutPrefix) !== null
-  const isPrerelease = semver.prerelease(inputTag) !== null
+export async function getLastMatchingTag(
+  inputTag: string,
+  tagFilter: (tag: string) => boolean,
+  tagTemplate: string,
+) {
+  const inputVersionString = getVersionString(tagTemplate, inputTag)
+  const isVersion = semver.valid(inputVersionString) !== null
+  const isPrerelease = semver.prerelease(inputVersionString) !== null
   const tags = await getGitTags()
   const filteredTags = tags.filter(tagFilter)
 
@@ -38,17 +66,16 @@ export async function getLastMatchingTag(inputTag: string, tagFilter: (tag: stri
   // Doing a stable release, find the last stable release to compare with
   if (!isPrerelease && isVersion) {
     tag = filteredTags.find((tag) => {
-      const tagWithoutPrefix = getTagWithoutPrefix(tag)
+      const versionString = getVersionString(tagTemplate, tag)
 
-      return tagWithoutPrefix !== inputTagWithoutPrefix
-        && semver.valid(tagWithoutPrefix) !== null
-        && semver.prerelease(tagWithoutPrefix) === null
+      return versionString !== inputVersionString
+        && semver.valid(versionString) !== null
+        && semver.prerelease(versionString) === null
     })
   }
 
   // Fallback to the last tag, that are not the input tag
   tag ||= filteredTags.find(tag => tag !== inputTag)
-
   return tag
 }
 

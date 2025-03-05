@@ -1,11 +1,11 @@
 import type { ChangelogOptions, ResolvedChangelogOptions } from './types'
-import { getCurrentGitBranch, getFirstGitCommit, getGitHubRepo, getLastMatchingTag, isPrerelease } from './git'
+import { getCurrentGitBranch, getFirstGitCommit, getGitHubRepo, getLastMatchingTag, getSafeTagTemplate, isPrerelease } from './git'
 
 export function defineConfig(config: ChangelogOptions) {
   return config
 }
 
-const defaultConfig: ChangelogOptions = {
+const defaultConfig = {
   scopeMap: {},
   types: {
     feat: { title: '🚀 Features' },
@@ -18,7 +18,8 @@ const defaultConfig: ChangelogOptions = {
   contributors: true,
   capitalize: true,
   group: true,
-}
+  tag: 'v%s',
+} satisfies ChangelogOptions
 
 export async function resolveConfig(options: ChangelogOptions) {
   const { loadConfig } = await import('c12')
@@ -33,7 +34,12 @@ export async function resolveConfig(options: ChangelogOptions) {
   config.baseUrlApi = config.baseUrlApi ?? 'api.github.com'
   config.to = config.to || await getCurrentGitBranch()
   config.tagFilter = config.tagFilter ?? (() => true)
-  config.from = config.from || await getLastMatchingTag(config.to, config.tagFilter) || await getFirstGitCommit()
+  config.tag = getSafeTagTemplate(config.tag ?? defaultConfig.tag)
+  config.from = config.from || await getLastMatchingTag(
+    config.to,
+    config.tagFilter,
+    config.tag,
+  ) || await getFirstGitCommit()
   // @ts-expect-error backward compatibility
   config.repo = config.repo || config.github || await getGitHubRepo(config.baseUrl)
   // @ts-expect-error backward compatibility
