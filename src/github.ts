@@ -65,7 +65,9 @@ export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorI
     return info
 
   try {
-    const data = await $fetch(`https://${options.baseUrlApi}/search/users?q=${encodeURIComponent(info.email)}`, {
+    // https://docs.github.com/en/search-github/searching-on-github/searching-users#search-only-users-or-organizations
+    const q = encodeURIComponent(`${info.email} type:user in:email`)
+    const data = await $fetch(`https://${options.baseUrlApi}/search/users?q=${q}`, {
       headers: getHeaders(options),
     })
     info.login = data.items[0].login
