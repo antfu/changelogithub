@@ -6,6 +6,7 @@ import { blue, bold, cyan, dim, red, yellow } from 'ansis'
 import cac from 'cac'
 import { execa } from 'execa'
 import { version } from '../package.json'
+import { uploadAssets } from './github'
 import { generate, hasTagOnGitHub, isRepoShallow, sendRelease } from './index'
 
 const cli = cac('changelogithub')
@@ -26,6 +27,7 @@ cli
   .option('--emoji', 'Use emojis in section titles', { default: true })
   .option('--group', 'Nest commit messages under their scopes')
   .option('--dry', 'Dry run')
+  .option('--assets <paths...>', 'Files to upload as assets to the release')
   .help()
 
 async function readTokenFromGitHubCli() {
@@ -103,6 +105,10 @@ cli
       }
 
       await sendRelease(config, md)
+
+      if (args.assets && args.assets.length > 0) {
+        await uploadAssets(config, args.assets)
+      }
     }
     catch (e: any) {
       console.error(red(String(e)))
