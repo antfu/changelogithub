@@ -150,14 +150,25 @@ export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   }
 }
 
-export async function uploadAssets(options: ChangelogOptions, assets: string[]) {
+export async function uploadAssets(options: ChangelogOptions, assets: string | string[]) {
   const headers = getHeaders(options)
+
+  let assetList: string[] = []
+  if (typeof assets === 'string') {
+    assetList = assets.split(',').map(s => s.trim()).filter(Boolean)
+  }
+  else if (Array.isArray(assets)) {
+    assetList = assets.flatMap(item =>
+      typeof item === 'string' ? item.split(',').map(s => s.trim()) : [],
+    ).filter(Boolean)
+  }
+
   // Get the release by tag to obtain the upload_url
   const release = await $fetch(`https://${options.baseUrlApi}/repos/${options.releaseRepo}/releases/tags/${options.to}`, {
     headers,
   })
 
-  for (const asset of assets) {
+  for (const asset of assetList) {
     const filePath = path.resolve(asset)
     const fileData = await fs.readFile(filePath)
     const fileName = path.basename(filePath)
