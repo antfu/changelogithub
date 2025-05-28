@@ -1,7 +1,9 @@
 import type { AuthorInfo, ChangelogOptions, Commit } from './types'
-import { notNullish } from '@antfu/utils'
-import { cyan, green } from 'ansis'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 /* eslint-disable no-console */
+import { notNullish } from '@antfu/utils'
+import { cyan, green, red } from 'ansis'
 import { $fetch } from 'ofetch'
 
 export async function sendRelease(
@@ -145,5 +147,48 @@ export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   }
   catch {
     return false
+  }
+}
+
+export async function uploadAssets(options: ChangelogOptions, assets: string | string[]) {
+  const headers = getHeaders(options)
+
+  let assetList: string[] = []
+  if (typeof assets === 'string') {
+    assetList = assets.split(',').map(s => s.trim()).filter(Boolean)
+  }
+  else if (Array.isArray(assets)) {
+    assetList = assets.flatMap(item =>
+      typeof item === 'string' ? item.split(',').map(s => s.trim()) : [],
+    ).filter(Boolean)
+  }
+
+  // Get the release by tag to obtain the upload_url
+  const release = await $fetch(`https://${options.baseUrlApi}/repos/${options.releaseRepo}/releases/tags/${options.to}`, {
+    headers,
+  })
+
+  for (const asset of assetList) {
+    const filePath = path.resolve(asset)
+    const fileData = await fs.readFile(filePath)
+    const fileName = path.basename(filePath)
+    const contentType = 'application/octet-stream'
+
+    const uploadUrl = release.upload_url.replace('{?name,label}', `?name=${encodeURIComponent(fileName)}`)
+    console.log(cyan(`Uploading ${fileName}...`))
+    try {
+      await $fetch(uploadUrl, {
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Type': contentType,
+        },
+        body: fileData,
+      })
+      console.log(green(`Uploaded ${fileName} successfully.`))
+    }
+    catch (error) {
+      console.error(red(`Failed to upload ${fileName}: ${error}`))
+    }
   }
 }

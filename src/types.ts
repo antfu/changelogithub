@@ -94,6 +94,12 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * @default `v%s`.
    */
   tag?: string
+
+  /**
+   * Files to upload as assets to the release
+   * `--assets path1,path2` or `--assets path1 --assets path2`
+   */
+  assets?: string[] | string
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>
