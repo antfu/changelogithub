@@ -51,6 +51,39 @@ jobs:
 
 It will be trigged whenever you push a tag to GitHub that starts with `v`.
 
+### GitHub Actions Outputs
+
+When running in GitHub Actions, `changelogithub` provides the following outputs that can be used in subsequent workflow steps:
+
+- `id` - The unique ID of the created/updated GitHub release
+- `html_url` - The web URL of the GitHub release page
+- `upload_url` - The API URL for uploading assets to the release
+
+#### Using Outputs in Workflow
+
+```yml
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Release
+        id: changelog
+        run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Upload Assets
+        run: |
+          echo "Release ID: ${{ steps.changelog.outputs.id }}"
+          echo "Release URL: ${{ steps.changelog.outputs.html_url }}"
+          echo "Upload URL: ${{ steps.changelog.outputs.upload_url }}"
+          # Use the outputs for further processing
+```
+
 ## Configuration
 
 You can put a configuration file in the project root, named as `changelogithub.config.{json,ts,js,mjs,cjs}`, `.changelogithubrc` or use the `changelogithub` field in `package.json`.
