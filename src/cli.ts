@@ -2,6 +2,7 @@
 
 import fs from 'node:fs/promises'
 import process from 'node:process'
+import { setOutput } from '@actions/core'
 import { blue, bold, cyan, dim, red, yellow } from 'ansis'
 import cac from 'cac'
 import { execa } from 'execa'
@@ -104,7 +105,11 @@ cli
         return
       }
 
-      await sendRelease(config, md)
+      const { id, html_url, upload_url } = await sendRelease(config, md)
+
+      setOutput('id', id)
+      setOutput('html_url', html_url)
+      setOutput('upload_url', upload_url)
 
       if (args.assets && args.assets.length > 0) {
         await uploadAssets(config, args.assets)

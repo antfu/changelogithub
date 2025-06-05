@@ -43,6 +43,7 @@ export async function sendRelease(
     headers,
   })
   console.log(green(`Released on ${res.html_url}`))
+  return res
 }
 
 function getHeaders(options: ChangelogOptions) {
