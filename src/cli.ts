@@ -28,7 +28,7 @@ cli
   .option('--emoji', 'Use emojis in section titles', { default: true })
   .option('--group', 'Nest commit messages under their scopes')
   .option('--dry', 'Dry run')
-  .option('--assets <paths...>', 'Files to upload as assets to the release')
+  .option('--assets <paths...>', 'Files to upload as assets to the release. Use quotes to prevent shell glob expansion, e.g., "--assets \'dist/*.js\'"')
   .help()
 
 async function readTokenFromGitHubCli() {

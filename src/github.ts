@@ -5,6 +5,7 @@ import path from 'node:path'
 import { notNullish } from '@antfu/utils'
 import { cyan, green, red } from 'ansis'
 import { $fetch } from 'ofetch'
+import { glob } from 'tinyglobby'
 
 export async function sendRelease(
   options: ChangelogOptions,
@@ -153,7 +154,6 @@ export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
 
 export async function uploadAssets(options: ChangelogOptions, assets: string | string[]) {
   const headers = getHeaders(options)
-
   let assetList: string[] = []
   if (typeof assets === 'string') {
     assetList = assets.split(',').map(s => s.trim()).filter(Boolean)
@@ -164,32 +164,58 @@ export async function uploadAssets(options: ChangelogOptions, assets: string | s
     ).filter(Boolean)
   }
 
+  // Expand glob patterns to actual file paths
+  const expandedAssets: string[] = []
+  for (const pattern of assetList) {
+    try {
+      // Use the pattern directly without shell expansion
+      const matches = await glob(pattern)
+      if (matches.length) {
+        expandedAssets.push(...matches)
+      }
+      else {
+        // If no matches found, treat as literal path
+        expandedAssets.push(pattern)
+      }
+    }
+    catch (error) {
+      console.error(red(`Failed to process glob pattern "${pattern}": ${error}`))
+      // Keep the original pattern as fallback
+      expandedAssets.push(pattern)
+    }
+  }
+
   // Get the release by tag to obtain the upload_url
   const release = await $fetch(`https://${options.baseUrlApi}/repos/${options.releaseRepo}/releases/tags/${options.to}`, {
     headers,
   })
 
-  for (const asset of assetList) {
+  for (const asset of expandedAssets) {
     const filePath = path.resolve(asset)
-    const fileData = await fs.readFile(filePath)
-    const fileName = path.basename(filePath)
-    const contentType = 'application/octet-stream'
-
-    const uploadUrl = release.upload_url.replace('{?name,label}', `?name=${encodeURIComponent(fileName)}`)
-    console.log(cyan(`Uploading ${fileName}...`))
     try {
-      await $fetch(uploadUrl, {
-        method: 'POST',
-        headers: {
-          ...headers,
-          'Content-Type': contentType,
-        },
-        body: fileData,
-      })
-      console.log(green(`Uploaded ${fileName} successfully.`))
+      const fileData = await fs.readFile(filePath)
+      const fileName = path.basename(filePath)
+      const contentType = 'application/octet-stream'
+
+      const uploadUrl = release.upload_url.replace('{?name,label}', `?name=${encodeURIComponent(fileName)}`)
+      console.log(cyan(`Uploading ${fileName}...`))
+      try {
+        await $fetch(uploadUrl, {
+          method: 'POST',
+          headers: {
+            ...headers,
+            'Content-Type': contentType,
+          },
+          body: fileData,
+        })
+        console.log(green(`Uploaded ${fileName} successfully.`))
+      }
+      catch (error) {
+        console.error(red(`Failed to upload ${fileName}: ${error}`))
+      }
     }
     catch (error) {
-      console.error(red(`Failed to upload ${fileName}: ${error}`))
+      console.error(red(`Failed to read file ${filePath}: ${error}`))
     }
   }
 }
