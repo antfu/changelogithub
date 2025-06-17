@@ -58,7 +58,8 @@
     "convert-gitmoji": "^0.1.5",
     "execa": "^9.6.0",
     "ofetch": "^1.4.1",
-    "semver": "^7.7.2"
+    "semver": "^7.7.2",
+    "tinyglobby": "^0.2.14"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.13.2",
