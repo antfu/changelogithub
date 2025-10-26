@@ -104,10 +104,10 @@ cli
         return
       }
 
-      await sendRelease(config, md)
+      const release = await sendRelease(config, md)
 
       if (args.assets && args.assets.length > 0) {
-        await uploadAssets(config, args.assets)
+        await uploadAssets(config, args.assets, release)
       }
     }
     catch (e: any) {
