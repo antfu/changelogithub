@@ -23,6 +23,7 @@ it('parse', async () => {
       "releaseRepo": "antfu/changelogithub",
       "repo": "antfu/changelogithub",
       "scopeMap": {},
+      "tag": "v%s",
       "tagFilter": [Function],
       "titles": {
         "breakingChanges": "🚨 Breaking Changes",
