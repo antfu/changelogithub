@@ -44,6 +44,7 @@ export async function sendRelease(
     headers,
   })
   console.log(green(`Released on ${res.html_url}`))
+  return res
 }
 
 function getHeaders(options: ChangelogOptions) {
@@ -151,7 +152,7 @@ export async function hasTagOnGitHub(tag: string, options: ChangelogOptions) {
   }
 }
 
-export async function uploadAssets(options: ChangelogOptions, assets: string | string[]) {
+export async function uploadAssets(options: ChangelogOptions, assets: string | string[], releaseResponse?: any) {
   const headers = getHeaders(options)
   let assetList: string[] = []
   if (typeof assets === 'string') {
@@ -185,7 +186,7 @@ export async function uploadAssets(options: ChangelogOptions, assets: string | s
   }
 
   // Get the release by tag to obtain the upload_url
-  const release = await $fetch(`https://${options.baseUrlApi}/repos/${options.releaseRepo}/releases/tags/${options.to}`, {
+  const release = releaseResponse ?? await $fetch(`https://${options.baseUrlApi}/repos/${options.releaseRepo}/releases/tags/${options.to}`, {
     headers,
   })
 
