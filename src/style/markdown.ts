@@ -39,7 +39,12 @@ function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
   if (refs)
     refs = `&nbsp;-&nbsp; ${refs}`
 
-  const description = options.capitalize ? capitalize(commit.description) : commit.description
+  let description = options.capitalize ? capitalize(commit.description) : commit.description
+
+  // replace markdown characters that may break the formatting
+  description = description
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
 
   return [description, refs].filter(i => i?.trim()).join(' ')
 }
