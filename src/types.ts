@@ -100,6 +100,12 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * `--assets path1,path2` or `--assets path1 --assets path2`
    */
   assets?: string[] | string
+
+  /**
+   * Format of the changelog
+   * @default 'markdown'
+   */
+  format?: 'markdown' | 'plain'
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>

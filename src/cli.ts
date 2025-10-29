@@ -28,6 +28,7 @@ cli
   .option('--group', 'Nest commit messages under their scopes')
   .option('--dry', 'Dry run')
   .option('--assets <paths...>', 'Files to upload as assets to the release. Use quotes to prevent shell glob expansion, e.g., "--assets \'dist/*.js\'"')
+  .option('--format <format>', 'Format of the changelog', { default: 'markdown' })
   .help()
 
 async function readTokenFromGitHubCli() {
@@ -54,13 +55,13 @@ cli
       console.log()
       console.log(dim(`changelo${bold('github')} `) + dim(`v${version}`))
 
-      const { config, md, commits } = await generate(args as any)
-      webUrl = `https://${config.baseUrl}/${config.releaseRepo}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(md))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
+      const { config, output, commits } = await generate(args as any)
+      webUrl = `https://${config.baseUrl}/${config.releaseRepo}/releases/new?title=${encodeURIComponent(String(config.name || config.to))}&body=${encodeURIComponent(String(output))}&tag=${encodeURIComponent(String(config.to))}&prerelease=${config.prerelease}`
 
       console.log(cyan(config.from) + dim(' -> ') + blue(config.to) + dim(` (${commits.length} commits)`))
       console.log(dim('--------------'))
       console.log()
-      console.log(md.replace(/&nbsp;/g, ''))
+      console.log(output.replace(/&nbsp;/g, ''))
       console.log()
       console.log(dim('--------------'))
 
@@ -78,7 +79,7 @@ cli
       }
 
       if (typeof config.output === 'string') {
-        await fs.writeFile(config.output, md, 'utf-8')
+        await fs.writeFile(config.output, output, 'utf-8')
         console.log(yellow(`Saved to ${config.output}`))
         return
       }
@@ -104,7 +105,7 @@ cli
         return
       }
 
-      const release = await sendRelease(config, md)
+      const release = await sendRelease(config, output)
 
       if (args.assets && args.assets.length > 0) {
         await uploadAssets(config, args.assets, release)
