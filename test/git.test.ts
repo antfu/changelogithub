@@ -6,7 +6,7 @@ const COMMIT_TO = '49b0222e8d60b7f299941def7511cee0460a8149'
 const regexToFindAllUrls = /https:\/\/\S*/g
 
 it('parse', async () => {
-  const { config, md } = await generate({
+  const { config, output } = await generate({
     from: COMMIT_FROM,
     to: COMMIT_TO,
   })
@@ -42,7 +42,7 @@ it('parse', async () => {
       },
     }
   `)
-  expect(md.replace(/&nbsp;/g, ' ').replace(/ +/g, ' ')).toMatchInlineSnapshot(`
+  expect(output.replace(/&nbsp;/g, ' ').replace(/ +/g, ' ')).toMatchInlineSnapshot(`
     "### Breaking Changes
 
     - **cli**: Rename \`groupByScope\` to \`group\` - by **Enzo Innocenzi** in https://github.com/antfu/changelogithub/issues/22 [<samp>(89282)</samp>](https://github.com/antfu/changelogithub/commit/8928229)
@@ -76,7 +76,7 @@ it.each([
   { baseUrl: undefined, baseUrlApi: undefined, repo: undefined },
   { baseUrl: 'test.github.com', baseUrlApi: 'api.test.github.com', repo: 'user/changelogithub' },
 ])('should generate config while baseUrl is set to $baseUrl', async (proposedConfig) => {
-  const { config, md } = await generate({
+  const { config, output } = await generate({
     ...proposedConfig,
     from: COMMIT_FROM,
     to: COMMIT_TO,
@@ -92,7 +92,7 @@ it.each([
     }))
   }
 
-  const urlsToGithub = md.match(regexToFindAllUrls)
+  const urlsToGithub = output.match(regexToFindAllUrls)
   expect(urlsToGithub?.every(url => url.startsWith(`https://${config.baseUrl}`))).toBe(true)
 })
 

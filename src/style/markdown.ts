@@ -1,9 +1,8 @@
 import type { Reference } from 'changelogen'
-import type { Commit, ResolvedChangelogOptions } from './types'
+import type { Commit, ResolvedChangelogOptions } from '../types'
 import { partition } from '@antfu/utils'
 import { convert } from 'convert-gitmoji'
-
-const emojisRE = /([\u2700-\u27BF\uE000-\uF8FF\u2011-\u26FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD10-\uDDFF])/g
+import { capitalize, emojisRE, groupBy, join } from '../utils'
 
 function formatReferences(references: Reference[], baseUrl: string, github: string, type: 'issues' | 'hash'): string {
   const refs = references
@@ -116,30 +115,4 @@ export function generateMarkdown(commits: Commit[], options: ResolvedChangelogOp
   lines.push('', `##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](${url})`)
 
   return convert(lines.join('\n').trim(), true)
-}
-
-function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {
-  for (const item of items) {
-    const v = (item as any)[key] as string
-    groups[v] = groups[v] || []
-    groups[v].push(item)
-  }
-  return groups
-}
-
-function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
-
-function join(array?: string[], glue = ', ', finalGlue = ' and '): string {
-  if (!array || array.length === 0)
-    return ''
-
-  if (array.length === 1)
-    return array[0]
-
-  if (array.length === 2)
-    return array.join(finalGlue)
-
-  return `${array.slice(0, -1).join(glue)}${finalGlue}${array.slice(-1)}`
 }
