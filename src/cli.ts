@@ -28,7 +28,7 @@ cli
   .option('--group', 'Nest commit messages under their scopes')
   .option('--dry', 'Dry run')
   .option('--assets <paths...>', 'Files to upload as assets to the release. Use quotes to prevent shell glob expansion, e.g., "--assets \'dist/*.js\'"')
-  .option('--format <format>', 'Format of the changelog', { default: 'markdown' })
+  .option('--style <style>', 'Style of the changelog', { default: 'markdown' })
   .help()
 
 async function readTokenFromGitHubCli() {

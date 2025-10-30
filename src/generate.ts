@@ -2,9 +2,9 @@ import type { ChangelogOptions } from './types'
 import { getGitDiff } from 'changelogen'
 import { resolveConfig } from './config'
 import { resolveAuthors } from './github'
-import { generateMarkdown } from './format/markdown'
 import { parseCommits } from './parse'
-import { generatePlain } from './format/plain'
+import { generateMarkdown } from './style/markdown'
+import { generatePlain } from './style/plain'
 
 export async function generate(options: ChangelogOptions) {
   const resolved = await resolveConfig(options)
@@ -16,7 +16,7 @@ export async function generate(options: ChangelogOptions) {
 
   let output: string
 
-  switch (resolved.format) {
+  switch (resolved.style) {
     case 'markdown':
       output = generateMarkdown(commits, resolved)
       break
@@ -24,7 +24,7 @@ export async function generate(options: ChangelogOptions) {
       output = generatePlain(commits, resolved)
       break
     default:
-      throw new Error(`Invalid format: ${resolved.format}`)
+      throw new Error(`Invalid style: ${resolved.style}`)
   }
 
   return { config: resolved, output, commits }

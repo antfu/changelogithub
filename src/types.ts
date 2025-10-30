@@ -102,10 +102,10 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
   assets?: string[] | string
 
   /**
-   * Format of the changelog
+   * Style of the changelog
    * @default 'markdown'
    */
-  format?: 'markdown' | 'plain'
+  style?: 'markdown' | 'plain'
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>
