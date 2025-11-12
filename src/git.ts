@@ -1,3 +1,4 @@
+import { RawGitCommit } from 'changelogen'
 import semver from 'semver'
 
 export async function getGitHubRepo(baseUrl: string) {
@@ -77,6 +78,39 @@ export async function getLastMatchingTag(
   // Fallback to the last tag, that are not the input tag
   tag ||= filteredTags.find(tag => tag !== inputTag)
   return tag
+}
+
+export async function getGitDiff(
+  from: string,
+  to: string,
+  paths: string[] = [],
+): Promise<RawGitCommit[]> {
+  // https://git-scm.com/docs/pretty-formats
+  const r = await execCommand(
+    'git',
+    [
+      '--no-pager', 'log',
+      `${from ? `${from}...` : ''}${to}`,
+      '--pretty="----%n%s|%h|%an|%ae%n%b"',
+      '--name-status',
+      ...(paths.length > 0 ? ['--', ...paths] : []),
+    ],
+  );
+  return r
+    .split("----\n")
+    .splice(1)
+    .map((line) => {
+      const [firstLine, ..._body] = line.split("\n");
+      const [message, shortHash, authorName, authorEmail] =
+        firstLine.split("|");
+      const r: RawGitCommit = {
+        message,
+        shortHash,
+        author: { name: authorName, email: authorEmail },
+        body: _body.join("\n"),
+      };
+      return r;
+    });
 }
 
 export async function isRefGitTag(to: string) {
