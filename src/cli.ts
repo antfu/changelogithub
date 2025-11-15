@@ -24,7 +24,7 @@ cli
   .option('-d, --draft', 'Mark release as draft')
   .option('--output <path>', 'Output to file instead of sending to GitHub')
   .option('--capitalize', 'Should capitalize for each comment message')
-  .option('--emoji', 'Use emojis in section titles', { default: true })
+  .option('--emoji', 'Use emojis in section titles')
   .option('--group', 'Nest commit messages under their scopes')
   .option('--dry', 'Dry run')
   .option('--assets <paths...>', 'Files to upload as assets to the release. Use quotes to prevent shell glob expansion, e.g., "--assets \'dist/*.js\'"')
