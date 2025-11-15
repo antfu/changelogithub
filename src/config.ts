@@ -16,6 +16,7 @@ const defaultConfig = {
     breakingChanges: '🚨 Breaking Changes',
   },
   contributors: true,
+  emoji: true,
   capitalize: true,
   group: true,
   tag: 'v%s',
