@@ -20,6 +20,7 @@ const defaultConfig = {
   capitalize: true,
   group: true,
   tag: 'v%s',
+  style: 'markdown',
 } satisfies ChangelogOptions
 
 export async function resolveConfig(options: ChangelogOptions) {
