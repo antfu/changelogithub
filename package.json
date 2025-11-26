@@ -1,8 +1,8 @@
 {
   "name": "changelogithub",
   "type": "module",
-  "version": "13.16.1",
-  "packageManager": "pnpm@10.19.0",
+  "version": "14.0.0",
+  "packageManager": "pnpm@10.23.0",
   "description": "Generate changelog for GitHub.",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
@@ -52,27 +52,27 @@
   },
   "dependencies": {
     "ansis": "^4.2.0",
-    "c12": "^3.3.1",
+    "c12": "^3.3.2",
     "cac": "^6.7.14",
     "changelogen": "0.5.7",
     "convert-gitmoji": "^0.1.5",
     "execa": "^9.6.0",
-    "ofetch": "^1.4.1",
+    "ofetch": "^1.5.1",
     "semver": "^7.7.3",
     "tinyglobby": "^0.2.15"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.1.0",
+    "@antfu/eslint-config": "^6.2.0",
     "@antfu/utils": "^9.3.0",
     "@types/debug": "^4.1.12",
     "@types/fs-extra": "^11.0.4",
     "@types/minimist": "^1.2.5",
     "@types/semver": "^7.7.1",
     "bumpp": "^10.3.1",
-    "eslint": "^9.38.0",
+    "eslint": "^9.39.1",
     "fs-extra": "^11.3.2",
     "typescript": "^5.9.3",
     "unbuild": "^3.6.1",
-    "vitest": "^4.0.3"
+    "vitest": "^4.0.13"
   }
 }

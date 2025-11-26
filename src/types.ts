@@ -106,6 +106,11 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * If true, CWD will be used as the path
    */
   commitPaths?: string[] | true
+  /**
+   * Style of the changelog
+   * @default 'markdown'
+   */
+  style?: 'markdown' | 'plain'
 }
 
 export type ResolvedChangelogOptions = Required<ChangelogOptions>
