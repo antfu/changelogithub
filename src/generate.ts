@@ -1,5 +1,5 @@
 import type { ChangelogOptions } from './types'
-import { getGitDiff } from 'changelogen'
+import { getGitDiff } from './git'
 import { resolveConfig } from './config'
 import { resolveAuthors } from './github'
 import { parseCommits } from './parse'

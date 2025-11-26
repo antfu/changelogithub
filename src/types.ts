@@ -102,6 +102,11 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
   assets?: string[] | string
 
   /**
+   * Paths to filter commits by
+   * If true, CWD will be used as the path
+   */
+  commitPaths?: string[] | true
+  /**
    * Style of the changelog
    * @default 'markdown'
    */
