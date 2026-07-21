@@ -2,7 +2,7 @@ import type { Reference } from 'changelogen'
 import type { Commit, ResolvedChangelogOptions } from '../types'
 import { partition } from '@antfu/utils'
 import { convert } from 'convert-gitmoji'
-import { capitalize, emojisRE, groupBy, join } from '../utils'
+import { capitalize, emojisRE, escapeHtml, groupBy, join } from '../utils'
 
 function formatReferences(references: Reference[], baseUrl: string, github: string, type: 'issues' | 'hash'): string {
   const refs = references
@@ -39,12 +39,8 @@ function formatLine(commit: Commit, options: ResolvedChangelogOptions) {
   if (refs)
     refs = `&nbsp;-&nbsp; ${refs}`
 
-  let description = options.capitalize ? capitalize(commit.description) : commit.description
-
-  // replace markdown characters that may break the formatting
-  description = description
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
+  // escape characters that may break the markdown/HTML formatting
+  const description = escapeHtml(options.capitalize ? capitalize(commit.description) : commit.description)
 
   return [description, refs].filter(i => i?.trim()).join(' ')
 }
