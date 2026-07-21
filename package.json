@@ -43,7 +43,7 @@
     "lint": "eslint .",
     "prepublishOnly": "nr build",
     "release": "bumpp",
-    "start": "nr build && node cli.mjs",
+    "start": "nr build && node dist/cli.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
