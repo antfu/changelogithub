@@ -1,5 +1,6 @@
 import { RawGitCommit } from 'changelogen'
-import semver from 'semver'
+import { x } from 'tinyexec'
+import { getPrerelease, isValid, normalize } from 'verkit'
 
 export async function getGitHubRepo(baseUrl: string) {
   const url = await execCommand('git', ['config', '--get', 'remote.origin.url'])
@@ -58,8 +59,8 @@ export async function getLastMatchingTag(
   tagTemplate: string,
 ) {
   const inputVersionString = getVersionString(tagTemplate, inputTag)
-  const isVersion = semver.valid(inputVersionString) !== null
-  const isPrerelease = semver.prerelease(inputVersionString) !== null
+  const isVersion = isValid(inputVersionString)
+  const isPrerelease = getPrerelease(inputVersionString) !== null
   const tags = await getGitTags()
   const filteredTags = tags.filter(tagFilter)
 
@@ -70,8 +71,8 @@ export async function getLastMatchingTag(
       const versionString = getVersionString(tagTemplate, tag)
 
       return versionString !== inputVersionString
-        && semver.valid(versionString) !== null
-        && semver.prerelease(versionString) === null
+        && normalize(versionString) !== null
+        && getPrerelease(versionString) === null
     })
   }
 
@@ -114,9 +115,8 @@ export async function getGitDiff(
 }
 
 export async function isRefGitTag(to: string) {
-  const { execa } = await import('execa')
   try {
-    await execa('git', ['show-ref', '--verify', `refs/tags/${to}`], { reject: true })
+    await x('git', ['show-ref', '--verify', `refs/tags/${to}`], { throwOnError: true })
   }
   catch {
     return false
@@ -132,7 +132,6 @@ export function isPrerelease(version: string) {
 }
 
 async function execCommand(cmd: string, args: string[]) {
-  const { execa } = await import('execa')
-  const res = await execa(cmd, args)
+  const res = await x(cmd, args)
   return res.stdout.trim()
 }

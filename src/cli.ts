@@ -4,7 +4,7 @@ import fs from 'node:fs/promises'
 import process from 'node:process'
 import { blue, bold, cyan, dim, red, yellow } from 'ansis'
 import cac from 'cac'
-import { execa } from 'execa'
+import { x } from 'tinyexec'
 import { version } from '../package.json'
 import { uploadAssets } from './github'
 import { generate, hasTagOnGitHub, isRepoShallow, sendRelease } from './index'
@@ -34,7 +34,7 @@ cli
 
 async function readTokenFromGitHubCli() {
   try {
-    return (await execa('gh', ['auth', 'token'])).stdout.trim()
+    return (await x('gh', ['auth', 'token'])).stdout.trim()
   }
   catch {
     return ''
