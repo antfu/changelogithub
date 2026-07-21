@@ -9,7 +9,7 @@ import { generatePlain } from './style/plain'
 export async function generate(options: ChangelogOptions) {
   const resolved = await resolveConfig(options)
 
-  const rawCommits = await getGitDiff(resolved.from, resolved.to)
+  const rawCommits = await getGitDiff(resolved.from, resolved.to, resolved.commitFilterByPaths)
   const commits = parseCommits(rawCommits, resolved)
   if (resolved.contributors)
     await resolveAuthors(commits, resolved)

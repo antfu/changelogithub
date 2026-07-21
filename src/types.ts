@@ -105,7 +105,7 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
    * Paths to filter commits by
    * If true, CWD will be used as the path
    */
-  commitPaths?: string[] | true
+  commitFilterByPaths?: string[] | true
   /**
    * Style of the changelog
    * @default 'markdown'
@@ -113,7 +113,9 @@ export interface ChangelogOptions extends Partial<ChangelogenOptions> {
   style?: 'markdown' | 'plain'
 }
 
-export type ResolvedChangelogOptions = Required<ChangelogOptions>
+export type ResolvedChangelogOptions = Required<Omit<ChangelogOptions, 'commitFilterByPaths'>> & {
+  commitFilterByPaths: string[]
+}
 
 export interface AuthorInfo {
   commits: string[]
