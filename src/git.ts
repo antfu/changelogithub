@@ -1,6 +1,6 @@
 import type { RawGitCommit } from 'changelogen'
 import { x } from 'tinyexec'
-import { getPrerelease, isValid, normalize } from 'verkit'
+import { isStable } from 'verkit'
 
 export async function getGitHubRepo(baseUrl: string) {
   const url = await execCommand('git', ['config', '--get', 'remote.origin.url'])
@@ -59,21 +59,16 @@ export async function getLastMatchingTag(
   tagTemplate: string,
 ) {
   const inputVersionString = getVersionString(tagTemplate, inputTag)
-  const isVersion = isValid(inputVersionString)
-  // `getPrerelease` returns an empty array for stable versions, and `null` for invalid ones
-  const isPrerelease = !!getPrerelease(inputVersionString)?.length
   const tags = await getGitTags()
   const filteredTags = tags.filter(tagFilter)
 
   let tag: string | undefined
   // Doing a stable release, find the last stable release to compare with
-  if (!isPrerelease && isVersion) {
+  if (isStable(inputVersionString)) {
     tag = filteredTags.find((tag) => {
       const versionString = getVersionString(tagTemplate, tag)
 
-      return versionString !== inputVersionString
-        && normalize(versionString) !== null
-        && !getPrerelease(versionString)?.length
+      return versionString !== inputVersionString && isStable(versionString)
     })
   }
 

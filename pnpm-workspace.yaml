@@ -1,7 +1,7 @@
 allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
-  - verkit@0.1.2
+  - verkit@0.3.2
   - tsdown@0.22.12
 shellEmulator: true
 trustPolicy: no-downgrade
