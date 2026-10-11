@@ -60,7 +60,16 @@ const excludeAuthors = [
   /\(bot\)/i,
 ]
 
+// https://docs.github.com/en/account-and-profile/reference/email-addresses-reference#your-noreply-email-address
+const noreplyEmailRE = /^(?:\d+\+)?([^@+]+)@users\.noreply\.github\.com$/i
+
 export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorInfo) {
+  if (info.login)
+    return info
+
+  // noreply addresses are not searchable, but contain the login
+  if ((options.baseUrl ?? 'github.com') === 'github.com')
+    info.login = info.email.match(noreplyEmailRE)?.[1]
   if (info.login)
     return info
 
