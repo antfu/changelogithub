@@ -61,21 +61,33 @@ const excludeAuthors = [
 ]
 
 // https://docs.github.com/en/account-and-profile/reference/email-addresses-reference#your-noreply-email-address
-const noreplyEmailRE = /^(?:\d+\+)?([^@+]+)@users\.noreply\.github\.com$/i
+const noreplyEmailRE = /^(\d+)\+[^@]+@users\.noreply\.github\.com$/i
 
 export async function resolveAuthorInfo(options: ChangelogOptions, info: AuthorInfo) {
-  if (info.login)
-    return info
-
-  // noreply addresses are not searchable, but contain the login
-  if ((options.baseUrl ?? 'github.com') === 'github.com')
-    info.login = info.email.match(noreplyEmailRE)?.[1]
   if (info.login)
     return info
 
   // token not provided, skip github resolving
   if (!options.token)
     return info
+
+  // noreply addresses are not searchable, but contain the account ID.
+  // The username in them goes stale when the account is renamed.
+  const id = (options.baseUrl ?? 'github.com') === 'github.com'
+    ? info.email.match(noreplyEmailRE)?.[1]
+    : undefined
+  if (id) {
+    try {
+      const data = await $fetch(`https://${options.baseUrlApi}/user/${id}`, {
+        headers: getHeaders(options),
+      })
+      info.login = data.login
+    }
+    catch {}
+
+    if (info.login)
+      return info
+  }
 
   try {
     // https://docs.github.com/en/search-github/searching-on-github/searching-users#search-only-users-or-organizations
